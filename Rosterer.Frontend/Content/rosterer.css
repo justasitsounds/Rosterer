@@ -1,0 +1,36 @@
+﻿.roster .week {
+    display: block;
+    overflow: hidden;
+    width: 100%
+}
+
+.roster .week .day {
+    -moz-border-radius: 3px;
+    border: 1px solid #669;
+    border-radius: 3px;
+    float: left;
+    height: 180px;
+    margin: 2px;
+    position: relative;
+    width: 13%;
+}
+
+.roster .week .day h3 {
+    background-color: #cce;
+    margin: 0px;
+    padding-left: 4px;
+    padding-right: 4px;   
+}
+
+.roster .week .day.today { background-color: #ff6; }
+
+.roster .week .day.wrongmonth { background-color: #999; }
+
+.dayofmonth {
+    bottom: 0px;
+    color: #ddd;
+    font-size: 50px;
+    height: 50px;
+    position: absolute;
+    right: 0px;
+}

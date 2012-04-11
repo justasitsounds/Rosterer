@@ -1,0 +1,9 @@
+*.user
+Rosterer.crunchsolution.cache
+Rosterer.ncrunchsolution
+Rosterer.sln.DotSettings.user
+*.suo
+[Bb]in/
+[Oo]bj/
+packages/
+_Resharper.Rosterer/

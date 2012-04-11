@@ -1,0 +1,12 @@
+﻿@using Rosterer.Domain
+@model Rosterer.Frontend.Models.MonthModel
+
+<h2>@Html.ActionLink("<", "Index", new { month = @Model.PreviousMonth.Month, year = @Model.PreviousMonth.Year }) 
+    @Model.MonthName @Model.Year 
+    @Html.ActionLink(">", "Index", new { month = @Model.NextMonth.Month, year = @Model.NextMonth.Year })</h2>
+<div class="roster">
+    @foreach (CalendarWeek week in Model.CalendarWeeks)
+    {
+        @Html.Partial("Week", week)
+    }
+</div>

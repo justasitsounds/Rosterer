@@ -1,0 +1,21 @@
+﻿@using Rosterer.Domain
+@model Rosterer.Domain.CalendarWeek
+
+<div class="week">
+    @foreach (CalendarDay day in Model.Days)
+    {
+        <div class="day @if (day.IsToday())
+                        {
+                            @:today
+                        }
+                    @if (!day.IsInCurrentMonth(Model.Monthnumber))
+                    {
+                        @:wrongmonth
+                    }">
+            <h3>@day.Name</h3>
+            <div class="dayofmonth">
+                @day.Date.Day
+            </div>
+        </div>
+    }
+</div>
