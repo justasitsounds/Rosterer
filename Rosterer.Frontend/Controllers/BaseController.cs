@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Castle.Core.Logging;
 using Raven.Client;
 
 namespace Rosterer.Frontend.Controllers
@@ -6,6 +7,7 @@ namespace Rosterer.Frontend.Controllers
     public abstract class BaseController : Controller
     {
         public IDocumentSession RavenSession { get; private set; }
+        public ILogger Logger { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {

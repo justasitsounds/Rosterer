@@ -1,16 +1,20 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Castle.Windsor;
+using Castle.Windsor.Installer;
 using Raven.Abstractions.Data;
 using Raven.Client.Document;
+using Rosterer.Frontend.Plumbing;
 
 namespace Rosterer.Frontend
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
-    public class MvcApplication : HttpApplication
+    public class MvcApplication : HttpApplication, IContainerAccessor
     {
         public static DocumentStore Store { get; set; }
+        private static IWindsorContainer container;
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -46,6 +50,26 @@ namespace Rosterer.Frontend
                         };
 
             Store.Initialize();
+
+            BootstrapContainer();
+        }
+
+        protected void Application_End()
+        {
+            container.Dispose();
+        }
+
+        public IWindsorContainer Container
+        {
+            get { return container; }
+        }
+
+        private static void BootstrapContainer()
+        {
+            container = new WindsorContainer()
+                .Install(FromAssembly.This());
+            var controllerFactory = new WindsorControllerFactory(container);
+            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
     }
 }
