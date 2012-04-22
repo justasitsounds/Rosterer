@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace Rosterer.Frontend.Models
@@ -25,8 +26,8 @@ namespace Rosterer.Frontend.Models
     public class LogOnModel
     {
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [Display(Name = "Email address")]
+        public string EmailAddress { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -40,8 +41,12 @@ namespace Rosterer.Frontend.Models
     public class RegisterModel
     {
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+        
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
@@ -58,5 +63,20 @@ namespace Rosterer.Frontend.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Range(0,255,ErrorMessage = "Valid colour values range from 0 to 255")]
+        [Display(Name = "Red Component",GroupName = "Color")]
+        public short Red { get; set; }
+
+        [Required]
+        [Range(0, 255, ErrorMessage = "Valid colour values range from 0 to 255")]
+        [Display(Name = "Green Component", GroupName = "Color")]
+        public short Green { get; set; }
+
+        [Required]
+        [Range(0, 255, ErrorMessage = "Valid colour values range from 0 to 255")]
+        [Display(Name = "Green Component", GroupName = "Color")]
+        public short Blue { get; set; }
     }
 }

@@ -4,7 +4,7 @@ to use a different color start by replacing all instances of
 #5c87b2 with your new color.
 ----------------------------------------------------------*/
 body {
-    background-color: #5c87b2;
+    background-color: #000000;
     color: #696969;
     font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
     font-size: .85em;
@@ -79,6 +79,9 @@ header, #header {
     margin-bottom: 0px;
     padding: 0;
     position: relative;
+    background-image: url("Images/pukara_logo.gif");
+    background-repeat: no-repeat;
+    background-position: 4px 6px;
 }
 
 header h1, #header h1 {
@@ -86,10 +89,10 @@ header h1, #header h1 {
     color: #fff;
     font-size: 32px !important;
     font-weight: bold;
-    line-height: 2em;
+    line-height: 1em;
     margin: 0;
     padding: 5px 0;
-    text-shadow: 1px 1px 2px #111;
+    text-shadow: 1px 1px 2px #ccc;
 }
 
 #main {
@@ -98,6 +101,7 @@ header h1, #header h1 {
     background-color: #fff;
     border-radius: 4px 0 0 0;
     padding: 30px 30px 15px 30px;
+    overflow: auto;
 }
 
 footer,
@@ -230,12 +234,14 @@ table th {
 .error { color: Red; }
 
 nav,
-#menucontainer { margin-top: 40px; }
+#menucontainer { margin-top: 50px; }
 
 div#title {
     display: block;
     float: left;
     text-align: left;
+    margin-left: 140px;
+    margin-top: 56px;
 }
 
 #logindisplay {

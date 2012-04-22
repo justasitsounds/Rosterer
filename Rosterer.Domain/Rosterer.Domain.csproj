@@ -56,9 +56,9 @@
     <Compile Include="CalendarDay.cs" />
     <Compile Include="CalendarEvent.cs" />
     <Compile Include="CalendarWeek.cs" />
-    <Compile Include="Location.cs" />
+    <Compile Include="Crypto\BCrypt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaffMember.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Venue.cs" />
   </ItemGroup>
   <ItemGroup>

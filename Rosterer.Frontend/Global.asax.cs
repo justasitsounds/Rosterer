@@ -1,10 +1,12 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Raven.Abstractions.Data;
 using Raven.Client.Document;
+using Rosterer.Frontend.ObjectMappers;
 using Rosterer.Frontend.Plumbing;
 
 namespace Rosterer.Frontend
@@ -27,13 +29,15 @@ namespace Rosterer.Frontend
 
             routes.MapRoute(
                 "Default", // Route name
-                "{controller}/{action}/{month}", // URL with parameters
-                new {controller = "Home", action = "Index", month = UrlParameter.Optional} // Parameter defaults
+                "{controller}/{action}/{id}", // URL with parameters
+                new {controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
                 );
         }
 
         protected void Application_Start()
         {
+            AutoMapperConfiguration.Configure();
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -50,8 +54,13 @@ namespace Rosterer.Frontend
                         };
 
             Store.Initialize();
+            Store.Conventions.IdentityPartsSeparator = "-";
 
             BootstrapContainer();
+
+            container.Register(Component.For<MyMembershipProvider>()
+                .LifeStyle.Transient
+                .Named("myProvider"));
         }
 
         protected void Application_End()

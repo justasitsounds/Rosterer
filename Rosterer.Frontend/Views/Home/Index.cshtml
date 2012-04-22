@@ -10,3 +10,24 @@
         @Html.Partial("Week", week)
     }
 </div>
+<div class="controlpanel">
+    <h3>Controls</h3>
+    <h4>Users</h4>
+    <ul>
+        <li>Book time off</li>
+        <li>Print</li>
+    </ul>
+    <h4>Admin Only</h4>
+    <ul>
+        <li>@Html.ActionLink("Create new user","Register","Account")</li>
+        <li>Create new event</li>
+
+    </ul>
+    <h5>Filter</h5>
+    <fieldset>
+        <legend>Users</legend>
+    </fieldset>
+    <fieldset>
+        <legend>Events</legend>
+    </fieldset>
+</div>

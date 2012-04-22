@@ -23,11 +23,19 @@
             <legend>Account Information</legend>
 
             <div class="editor-label">
-                @Html.LabelFor(m => m.UserName)
+                @Html.LabelFor(m => m.FirstName)
             </div>
             <div class="editor-field">
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.FirstName)
+                @Html.ValidationMessageFor(m => m.FirstName)
+            </div>
+            
+            <div class="editor-label">
+                @Html.LabelFor(m => m.LastName)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m => m.LastName)
+                @Html.ValidationMessageFor(m => m.LastName)
             </div>
 
             <div class="editor-label">
@@ -37,7 +45,30 @@
                 @Html.TextBoxFor(m => m.Email)
                 @Html.ValidationMessageFor(m => m.Email)
             </div>
-
+            <fieldset>
+                <legend>Colour</legend>
+                <div class="editor-label">
+                    @Html.LabelFor(m => m.Red)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(m => m.Red)
+                    @Html.ValidationMessageFor(m => m.Red)
+                </div>
+                <div class="editor-label">
+                    @Html.LabelFor(m => m.Green)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(m => m.Green)
+                    @Html.ValidationMessageFor(m => m.Green)
+                </div>
+                <div class="editor-label">
+                    @Html.LabelFor(m => m.Blue)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(m => m.Blue)
+                    @Html.ValidationMessageFor(m => m.Blue)
+                </div>
+            </fieldset>
             <div class="editor-label">
                 @Html.LabelFor(m => m.Password)
             </div>

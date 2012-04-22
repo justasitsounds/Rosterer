@@ -39,6 +39,9 @@
     <Reference Include="AsyncCtpLibrary">
       <HintPath>..\packages\RavenDB.1.0.701\lib\net40\AsyncCtpLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.2.1.267\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
@@ -108,10 +111,17 @@
     <Compile Include="Installers\LoggerInstaller.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\MonthModel.cs" />
+    <Compile Include="ObjectMappers\AutoMapperConfiguration.cs" />
+    <Compile Include="ObjectMappers\ModelToDomainMappingProfile.cs" />
+    <Compile Include="ObjectMappers\DomainToModelMappingProfile.cs" />
+    <Compile Include="Plumbing\MyMembershipProvider.cs" />
+    <Compile Include="Models\RosterMembershipUser.cs" />
     <Compile Include="Plumbing\WindsorControllerFactory.cs" />
+    <Compile Include="Plumbing\WindsorMembershipProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\pukara_logo.gif" />
     <Content Include="Content\rosterer.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -174,7 +184,7 @@
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Help.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />

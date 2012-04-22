@@ -31,28 +31,35 @@ namespace Rosterer.DataFixture
         {
             using (var session = Store.OpenSession())
             {
-                var userCount = session.Query<StaffMember>().Count();
-                var staff = new List<StaffMember>()
+                var userCount = session.Query<User>().Count();
+                var salt = BCrypt.GenerateSalt(12);
+                var staff = new List<User>()
                                     { 
-                                        new StaffMember(){
+                                        new User(){
                                             DisplayColour = System.Drawing.ColorTranslator.FromHtml("#cc9966"),
                                             EmailAddress = "angie_sceats@hotmail.com",
                                             FirstName = "Angie",
-                                            LastName = "Sceats"
+                                            LastName = "Sceats",
+                                            
+                                            PasswordHash = BCrypt.HashPassword("chelsea",salt)
                                         }
                                     };
-                if(userCount==0)
+                if (userCount == 0)
                 {
                     foreach (var staffMember in staff)
                     {
                         session.Store(staffMember);
                     }
-                    
+
                     session.SaveChanges();
                     return;
                 }
-                Console.WriteLine(string.Format("* - found {0} users    skipping import            *",userCount));
+                Console.WriteLine(string.Format("* - found {0} users    skipping import            *", userCount));
+
+
             }
+
+           
         }
 
         private static void InitRavenDb()

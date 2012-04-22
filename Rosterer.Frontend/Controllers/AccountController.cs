@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
+using Raven.Client.Linq;
+using Rosterer.Domain;
 using Rosterer.Frontend.Models;
 
 namespace Rosterer.Frontend.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         //
         // GET: /Account/LogOn
@@ -23,9 +26,9 @@ namespace Rosterer.Frontend.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Membership.ValidateUser(model.UserName, model.Password))
+                if (Membership.ValidateUser(model.EmailAddress, model.Password))
                 {
-                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                    FormsAuthentication.SetAuthCookie(model.EmailAddress, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
@@ -58,7 +61,7 @@ namespace Rosterer.Frontend.Controllers
 
         //
         // GET: /Account/Register
-
+        [Authorize]
         public ActionResult Register()
         {
             return View();
@@ -66,20 +69,28 @@ namespace Rosterer.Frontend.Controllers
 
         //
         // POST: /Account/Register
-
+        [Authorize]
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                // Attempt to register the user
                 MembershipCreateStatus createStatus;
-                Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null,
-                                      out createStatus);
-
+                if(RavenSession.Query<User>().Any(u => u.EmailAddress==model.Email))
+                {
+                    createStatus = MembershipCreateStatus.DuplicateEmail;
+                }
+                else
+                {
+                    var user = AutoMapper.Mapper.Map<RegisterModel, User>(model);
+                    user.PasswordHash = BCrypt.HashPassword(model.Password, BCrypt.GenerateSalt(12));
+                    RavenSession.Store(user);
+                    createStatus = MembershipCreateStatus.Success;
+                }
+                
                 if (createStatus == MembershipCreateStatus.Success)
                 {
-                    FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
+                    //FormsAuthentication.SetAuthCookie(model.FirstName, false /* createPersistentCookie */);
                     return RedirectToAction("Index", "Home");
                 }
                 else
