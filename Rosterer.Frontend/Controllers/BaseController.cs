@@ -11,8 +11,8 @@ namespace Rosterer.Frontend.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if(filterContext.IsChildAction)
-                return;
+            //if(filterContext.IsChildAction)
+                //return;
             RavenSession = MvcApplication.Store.OpenSession();
             base.OnActionExecuting(filterContext);
         }

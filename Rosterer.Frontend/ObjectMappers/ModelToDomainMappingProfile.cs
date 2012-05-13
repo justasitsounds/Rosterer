@@ -24,6 +24,18 @@ namespace Rosterer.Frontend.ObjectMappers
                 .ForMember(user => user.FirstName, opt => opt.MapFrom(r => r.FirstName))
                 .ForMember(user => user.LastName, opt => opt.MapFrom(r => r.LastName))
                 ;
+
+            Mapper.CreateMap<VenueModel,Venue>()
+                .ForMember(venue => venue.Location, opt => opt.ResolveUsing(r => new Location()
+                                                                                     {
+                                                                                         Address1 = r.Address1,
+                                                                                         Address2 = r.Address2,
+                                                                                         State = Enum.GetName(typeof(State),r.State),
+                                                                                         Longitude = r.Longitude,
+                                                                                         Latitude = r.Latitude
+                                                                                     }));
+
+            ;
         }
     }
 }

@@ -1,9 +1,15 @@
 ﻿@using Rosterer.Domain
+@using Rosterer.Frontend.Models
 @model Rosterer.Frontend.Models.MonthModel
-
-<h2>@Html.ActionLink("<", "Index", new { month = @Model.PreviousMonth.Month, year = @Model.PreviousMonth.Year }) 
-    @Model.MonthName @Model.Year 
-    @Html.ActionLink(">", "Index", new { month = @Model.NextMonth.Month, year = @Model.NextMonth.Year })</h2>
+<div>
+    <h2>@Html.ActionLink("<", "Index", new { month = @Model.PreviousMonth.Month, year = @Model.PreviousMonth.Year }) 
+        @Model.MonthName @Model.Year 
+        @Html.ActionLink(">", "Index", new { month = @Model.NextMonth.Month, year = @Model.NextMonth.Year })
+        <a id="openVenueForm" class="linkbutton" style="float:right;margin:0px 8px;width:auto;">&nbsp;New Venue&nbsp;</a>
+        <a id="control" class="linkbutton" style="float:right">+</a>
+        </h2>
+    
+</div>
 <div class="roster">
     @foreach (CalendarWeek week in Model.CalendarWeeks)
     {
@@ -21,7 +27,6 @@
     <ul>
         <li>@Html.ActionLink("Create new user","Register","Account")</li>
         <li>Create new event</li>
-
     </ul>
     <h5>Filter</h5>
     <fieldset>
@@ -31,3 +36,83 @@
         <legend>Events</legend>
     </fieldset>
 </div>
+
+<div id="venueform" title="New Venue">
+    @{ Html.RenderPartial("VenueForm", new VenueModel()); }
+</div>
+
+<div id="eventform" title="Event">
+   
+</div>
+<h2>Date</h2>
+<input type="text" class="date"/>
+@section Scripts
+{
+    <script type="text/javascript">
+
+        var CloseVenueModal = function () {
+            $("#venueform").dialog('close');
+        };
+
+        var CloseEventModal = function () {
+            $("#eventform").dialog('close');
+            $('#eventform').html();
+        };
+
+        $(document).ready(function () {
+            $(".roster .week .day .addevent").click(
+                
+                
+                function () {
+                    
+                    $("#eventform").dialog('open');
+                    $.ajax({
+                        type: "POST",
+                        url: "Event/Index",
+                        data: { StartDate: $(this).parent().attr('title'), EndDate: $(this).parent().attr('title') },
+                        async: false,
+
+                        success: function (result) {
+                            // Replace the div's content with the page method's return.
+                            $("#eventform").html(result);
+                            $('.date').not('.hasDatePicker').datetimepicker();
+                        }
+                    });
+                }
+
+            );
+            
+            //$('.date').datetimepicker();
+
+            var controlsOpen = false;
+            $("#control").click(function () {
+                if (controlsOpen) {
+                    $(".controlpanel").hide().animate({ width: "0%" }, 400);
+                    $(".roster").animate({ width: "100%" }, 400);
+                    $(this).html("+");
+                    controlsOpen = false;
+                } else {
+                    $(".controlpanel").animate({ width: "19%" }, 400, function () { $(this).show(); });
+                    $(".roster").animate({ width: "80%" }, 400);
+                    $(this).html("-");
+                    controlsOpen = true;
+                }
+            });
+
+            $("#venueform, #eventform").dialog({
+                autoOpen: false,
+                height: 700,
+                width: 500,
+                modal: true
+            });
+
+            $("#openVenueForm").click(function () {
+                $("#venueform").dialog('open');
+            });
+
+            $("#closeVenueForm").click(function () {
+                CloseVenueModal();
+            });
+        });
+    </script>
+}

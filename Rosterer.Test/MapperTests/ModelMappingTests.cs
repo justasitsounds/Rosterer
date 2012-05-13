@@ -48,6 +48,11 @@ namespace Rosterer.Test.MapperTests
             Assert.Equal(user.DisplayColour.G,(byte)registermodel.Green);
             Assert.Equal(user.DisplayColour.B,(byte)registermodel.Blue);
 
+            var venuemodel = new VenueModel() {Address1 = "somehwre"};
+
+            var venue = Mapper.Map<VenueModel, Venue>(venuemodel);
+            Assert.Equal(venue.Location.Address1, venuemodel.Address1);
+
         }
 
     }

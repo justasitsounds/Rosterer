@@ -1,0 +1,7 @@
+﻿@model Rosterer.Frontend.Models.LogFileContent
+
+<h2>@Model.FileName</h2>
+@foreach(var line in Model.Lines)
+{
+    <p>@line</p>
+}

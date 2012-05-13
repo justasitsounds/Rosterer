@@ -1,0 +1,8 @@
+﻿@model List<Rosterer.Frontend.Models.LogFile>
+<h2>Logs</h2>
+<ul>
+@foreach(var logfile in Model)
+{
+    <li>@Html.ActionLink(logfile.Name, "Details", new {id = logfile.Name})</li>
+}
+</ul>

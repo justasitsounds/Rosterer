@@ -4,7 +4,7 @@
 <div class="week">
     @foreach (CalendarDay day in Model.Days)
     {
-        <div class="day @if (day.IsToday())
+        <div title="click to add event" class="day @if (day.IsToday())
                         {
                             @:today
                         }
@@ -12,7 +12,8 @@
                     {
                         @:wrongmonth
                     }">
-            <h3>@day.Name</h3>
+            <h3 title="@day.Date">@day.Name<a href="#" class="addevent" title="add new event">+</a></h3>
+            <div class="dayContent"></div>
             <div class="dayofmonth">
                 @day.Date.Day
             </div>

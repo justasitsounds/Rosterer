@@ -26,6 +26,8 @@ namespace Rosterer.Frontend
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
+            routes.IgnoreRoute("{*js}", new { favicon = @"(.*/)?.js(/.*)?" });
 
             routes.MapRoute(
                 "Default", // Route name
