@@ -74,14 +74,18 @@ namespace Rosterer.Frontend.Controllers
                     newEvent.AddStaff(user);
                 }
                 RavenSession.Store(newEvent);
-                RavenSession.SaveChanges();   
+                RavenSession.SaveChanges();
+                
             }
             ModelState.Clear();
 
             if (Request.IsAjaxRequest())
+            {
+                if (ModelState.IsValid)
+                    return Json(eventFormModel);
                 return PartialView("EventForm", eventFormModel);
-            else
-                return RedirectToAction("Index","Home");
+            }
+            return RedirectToAction("Index", "Home");
         } 
 
         

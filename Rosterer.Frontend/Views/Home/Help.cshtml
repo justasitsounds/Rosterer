@@ -1,4 +1,16 @@
-﻿<h2>Help</h2>
+﻿@section Navigation{
+    <ul class="nav">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li class="active">@Html.ActionLink("Help", "Help", "Home")</li>
+        @if (Request.IsAuthenticated)
+        {
+            <li>@Html.ActionLink("Create New User", "Register", "Account")</li>
+        }
+    </ul>
+}
+
+
+<h2>Help</h2>
 <h3>Frequently Asked Questions</h3>
 <ul>
     <li><a href="#noAccount">I don't have an account</a></li>

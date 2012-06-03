@@ -1,10 +1,13 @@
 ﻿@using Rosterer.Frontend.Models
 @model Rosterer.Frontend.Models.VenueModel
-
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal">×</button>
 <h3>Venue</h3>
+</div>
 @Html.ValidationSummary(true, "Venue Creation was unsuccessful. Please correct the errors and try again.")
 @using (Ajax.BeginForm("Venue", new AjaxOptions() { OnSuccess = "CloseVenueModal", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }))
 {
+    <div class="modal-body">
     <div class="editor-label">
         @Html.LabelFor(m => m.Name)
     </div>
@@ -38,11 +41,11 @@
     <div class="editor-field">
         @Html.TextAreaFor(m => m.Notes,5,30,new{})
     </div>
-    <input type='button' id="closeVenueForm" value="Cancel"/>    <input type="submit" value="New Venue"/>
+    </div>
+<div class="modal-footer">
+   <a href="#" class="btn" data-dismiss="modal">Close</a>   
+   <input type="submit" value="New Event" class="btn btn-primary"/>
+</div>
+        
+    
 }
-<script type="text/javascript">
-    var completeForm = function () {
-        window.alert("oi");
-    }
-
-</script>

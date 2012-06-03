@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Rosterer.Domain;
 using Rosterer.Domain.Entities;
+using Rosterer.Frontend.Plumbing;
 
 namespace Rosterer.Frontend.Models
 {
@@ -20,6 +21,9 @@ namespace Rosterer.Frontend.Models
         [DataType(DataType.Date)]
         [Display(Name = "Date")]
         public DateTime StartDate { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        [CompareDatesAttribute("StartDate",ErrorMessage = "EndDate must be greater than Startdate")]
         public DateTime EndDate { get; set; }
 
         [Display(Name = "Staff")]

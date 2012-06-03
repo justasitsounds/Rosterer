@@ -3,10 +3,11 @@
 @foreach (var booking in Model)
 {
     <div class="booking">
+        <div class="venueName @booking.Venue.Id">@booking.Venue.Name
         @foreach (var staffMember in booking.Staff)
         {
             Html.RenderPartial("StaffMember", staffMember);
         }
-        <div class="venueName @booking.Venue.Id">@booking.Venue.Name</div>
+        </div>
     </div>
 }

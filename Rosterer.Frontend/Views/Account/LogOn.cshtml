@@ -2,6 +2,18 @@
 @{
     ViewBag.Title = "Log On";
 }
+
+@section Navigation{
+    <ul class="nav">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Help", "Help", "Home")</li>
+        @if (Request.IsAuthenticated)
+        {
+            <li>@Html.ActionLink("Create New User", "Register", "Account")</li>
+        }
+    </ul>
+}
+
 <h2>
     Log On</h2>
 <p>

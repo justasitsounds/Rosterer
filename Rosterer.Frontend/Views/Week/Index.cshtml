@@ -6,20 +6,22 @@
     @foreach (CalendarDay day in Model.Days)
     {
         <div id="@day.Date.Year-@day.Date.Month-@day.Date.Day" data-date="@day.Date" title="click to add event" class="day @if (day.IsToday())
-                        {
-                            @:today
-                        }
+                                                                                                                           {
+                                                                                                                               @:today
+                                                                                                                           }
                     @if (!day.IsInCurrentMonth(Model.Monthnumber))
                     {
                         @:wrongmonth
                     }">
-            <h3 title="@day.Date">@day.Name<a href="#" class="addevent" title="add new event">+</a></h3>
+            <div class="day-header">
+                <h4 title="@day.Date">@day.Name<a href="#" class="addevent" title="add new event"><i class="icon-plus-sign"></i></a></h4>
+            </div>
             <div class="dayContent">
                 @{
-        if (day.Bookings != null)
-        {
-            Html.RenderPartial("EventView", day.Bookings);
-        }
+                    if (day.Bookings != null)
+                    {
+                        Html.RenderPartial("EventView", day.Bookings);
+                    }
                 }
             </div>
             <div class="dayofmonth">

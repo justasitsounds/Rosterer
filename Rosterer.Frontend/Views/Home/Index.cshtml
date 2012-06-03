@@ -1,72 +1,81 @@
 ﻿@using Rosterer.Frontend.Models
 @model HomeModel
 
-<div>
-    <div id="control" class="linkbutton" style="float:right">+</div>
-    <h2 id="thisMonth"></h2>
-    
+@section Navigation{
+    <ul class="nav">
+        <li class="active">@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Help", "Help", "Home")</li>
+        @if (Request.IsAuthenticated)
+        {
+            <li>@Html.ActionLink("Create New User", "Register", "Account")</li>
+        }
+    </ul>
+    <div class="nav-collapse">
+        <ul class="nav pull-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Book time off</a></li>
+                    <li><a href="#">Print</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                <ul class="dropdown-menu admin">
+                    <li>@Html.ActionLink("Create new user","Register","Account")</li>
+                    <li class="divider"></li>
+                    <li class="nav-header">Filter Users</li>
+                    @foreach(var staffmember in Model.Staff)
+            {
+                <li style="padding:3px 15px;">
+                    <input type="checkbox" name="staff" value="@staffmember.Id" checked="checked"/><span class="label" style="background-color: @System.Drawing.ColorTranslator.ToHtml(staffmember.Color)">@staffmember.Initials</span>
+                </li>
+            }
+                    <li class="divider"></li>
+                    <li class="nav-header">Filter Venues</li>
+                    @foreach (var venueModel in Model.Venues)
+            {
+                <li style="padding:3px 15px;">
+                    <input type="checkbox" name="venues" value="@venueModel.Id" checked="checked"/> @venueModel.Name
+                </li>
+            }
+                </ul>
+            </li>
+        </ul>
+    </div>
+}
+
+<div id="logindisplay">
+    @Html.Partial("_LogOnPartial")
 </div>
+
+<h2 id="thisMonth"></h2>
 <div class="roster">
     <div id="progress"><img src="/Content/Images/ajax-loader.gif" alt="" /></div>
 </div>
-<div class="controlpanel">
-    <h3>Controls</h3>
-    <h4>Users</h4>
-    <ul>
-        <li>Book time off</li>
-        <li>Print</li>
-    </ul>
-    <h4>Admin Only</h4>
-    <ul>
-        <li>@Html.ActionLink("Create new user","Register","Account")</li>
-        <li>Create new event</li>
-    </ul>
-    <h5>Filter</h5>
-    <fieldset>
-        <legend>Users</legend>
-        <ul>
-            @foreach(var staffmember in Model.Staff)
-            {
-                <li style="background-color: @System.Drawing.ColorTranslator.ToHtml(staffmember.Color)">
-                    <input type="checkbox" name="staff" value="@staffmember.Id" checked="checked"/> @staffmember.Initials
-                </li>
-            }
-        </ul>
-    </fieldset>
-    <fieldset>
-        <legend>Venues</legend>
-        <ul>
-            @foreach (var venueModel in Model.Venues)
-            {
-                <li>
-                    <input type="checkbox" name="staff" value="@venueModel.Id" checked="checked"/> @venueModel.Name
-                </li>
-            }
-        </ul>
-    </fieldset>
+
+<div class="modal hide fade" id="venueform" title="New Venue">
+    @Html.Partial("VenueForm", new VenueModel())
 </div>
 
-<div id="venueform" title="New Venue">
-    @{ Html.RenderPartial("VenueForm", new VenueModel()); }
+<div class="modal hide fade" id="eventform" title="Event">
+   <p>event</p>
 </div>
 
-<div id="eventform" title="Event">
-   
-</div>
-@*<h2>Date</h2>
-<input type="text" class="date"/>*@
 @section Scripts
 {
 <script type="text/javascript " src="/Scripts/isodate.js"></script>
     <script type="text/javascript">
 
-        var CloseVenueModal = function () {
-            $("#venueform").dialog('close');
+        var CloseVenueModal = function (data) {
+            $("#venueform").modal('hide');
+            alert(data);
         };
 
-        var CloseEventModal = function () {
-            $("#eventform").dialog('close');
+        var CloseEventModal = function (data) {
+            $("#eventform").modal('hide');
             $('#eventform').html();
+            alert(data.StartDate);
         };
 
         var showProgress = function (element) {
@@ -102,7 +111,6 @@
 
             $(".roster .week .day .addevent").click(
                 function () {
-                    $("#eventform").dialog('open');
                     $.ajax({
                         type: "GET",
                         url: "Event/Create",
@@ -113,42 +121,26 @@
                             // Replace the div's content with the page method's return.
                             $("#eventform").html(result);
                             $('.date').not('.hasDatePicker').datetimepicker();
+                            $("#eventform").modal('show');
+                            jQuery.validator.unobtrusive.parse('#eventform');
                         }
                     });
                 }
 
             );
 
-            //$('.date').datetimepicker();
-
-            var controlsOpen = false;
-            $("#control").click(function () {
-                if (controlsOpen) {
-                    $(".controlpanel").hide().animate({ width: "0%" }, 400);
-                    $(".roster").animate({ width: "100%" }, 400);
-                    $(this).html("+");
-                    controlsOpen = false;
-                } else {
-                    $(".controlpanel").animate({ width: "19%" }, 400, function () { $(this).show(); });
-                    $(".roster").animate({ width: "80%" }, 400);
-                    $(this).html("-");
-                    controlsOpen = true;
-                }
-            });
-
-            $("#venueform, #eventform").dialog({
-                autoOpen: false,
-                height: 700,
-                width: 500,
-                modal: true
-            });
 
             $("#openVenueForm").click(function () {
-                $("#venueform").dialog('open');
+                $("#venueform").modal('show');
             });
 
             $("#closeVenueForm").click(function () {
                 CloseVenueModal();
+            });
+
+            //fix checkboxes collpasing drop-down nav
+            $('ul.dropdown-menu.admin li').click(function (event) {
+                event.stopPropagation();
             });
         });
     </script>

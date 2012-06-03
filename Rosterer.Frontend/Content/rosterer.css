@@ -1,4 +1,7 @@
-﻿.roster {
+﻿body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+.roster {
     width: 100%;
     float:left;
     display: block;
@@ -11,7 +14,7 @@
 
 .roster .week .day {
     -moz-border-radius: 3px;
-    border: 1px solid #669;
+    border: 1px solid #ccc;
     border-radius: 3px;
     float: left;
     height: 180px;
@@ -20,24 +23,33 @@
     width: 13%;
 }
 
-.roster .week .day h3 {
-    background-color: #cce;
-    margin: 0px;
-    padding-left: 4px;
-    padding-right: 4px;
-    overflow: auto;
+.roster .week .day .day-header 
+{
+    background-color: #FBFBFB;
+    background-image: -moz-linear-gradient(center top , #FFFFFF, #F5F5F5);
+    background-repeat: repeat-x;
+     /* Safari 4-5, Chrome 1-9 */ 
+     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FFFFFF), to(#F5F5F5)); 
+     /* Safari 5.1, Chrome 10+ */ 
+     background: -webkit-linear-gradient(top, #FFFFFF, #F5F5F5); 
+     /* Firefox 3.6+ */ 
+     background: -moz-linear-gradient(top, #FFFFFF, #F5F5F5); 
+     /* IE 10 */ 
+     background: -ms-linear-gradient(top, #FFFFFF, #F5F5F5); 
+     /* Opera 11.10+ */ 
+     background: -o-linear-gradient(top,  #FFFFFF, #F5F5F5);
+    border-bottom: 1px solid #DDDDDD;
+    padding: 2px 4px;
 }
 
-.roster .week .day h3 a {
+
+.roster .week .day h4 a {
     float: right;
     width: 18px;
     height: 18px;
     text-align: center;
     line-height: 18px;
-    border: 1px solid #333;
-    text-decoration: none; 
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+
     margin: 2px 0px;
 
 }
@@ -48,6 +60,10 @@
 .roster .week .day.wrongmonth { background-color: #999; }
 
 .roster .week .day .dayContent{ position: absolute;width: 100%;z-index: 3;margin:2px;}
+
+form {
+    margin-bottom: 0px;
+}
 
 .booking {
     border: 1px solid #999;
@@ -65,12 +81,13 @@
 }
 
 .dayofmonth {
-    bottom: 2px;
+    bottom: 0px;
     color: #ddd;
     font-size: 70px;
-    height: 70px;
+    line-height: 70px;
+    height: 60px;
     position: absolute;
-    right: 2px;
+    right: 0px;
     z-index: 2;
 }
 
@@ -115,3 +132,19 @@
 }
  
 
+/*----------*/
+.field-validation-error { color: #ff0000; }
+
+.field-validation-valid { display: none; }
+
+.input-validation-error {
+    background-color: #ffeeee;
+    border: 1px solid #ff0000;
+}
+
+.validation-summary-errors {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+.validation-summary-valid { display: none; }
