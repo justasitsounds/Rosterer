@@ -49,6 +49,21 @@
 
 .roster .week .day .dayContent{ position: absolute;width: 100%;z-index: 3;margin:2px;}
 
+.booking {
+    border: 1px solid #999;
+    padding: 2px;
+    overflow: auto;
+    margin-right: 4px;
+}
+.booking .venueName {
+    font-weight: bold;
+}
+.booking .staffmember {
+    float: right;
+    padding: 2px;
+    font-variant: small-caps;
+}
+
 .dayofmonth {
     bottom: 2px;
     color: #ddd;
@@ -63,6 +78,13 @@
     float: right;
     display: none;
     width: 0%;
+}
+.controlpanel fieldset {
+    padding: 0px;
+}
+.controlpanel ul {
+    margin:4px;
+    padding-left: 18px;
 }
 
 .linkbutton 

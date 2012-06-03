@@ -5,6 +5,7 @@ using System.Text;
 using Raven.Abstractions.Data;
 using Raven.Client.Document;
 using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 
 namespace Rosterer.DataFixture
 {

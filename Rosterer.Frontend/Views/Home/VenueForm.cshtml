@@ -2,6 +2,7 @@
 @model Rosterer.Frontend.Models.VenueModel
 
 <h3>Venue</h3>
+@Html.ValidationSummary(true, "Venue Creation was unsuccessful. Please correct the errors and try again.")
 @using (Ajax.BeginForm("Venue", new AjaxOptions() { OnSuccess = "CloseVenueModal", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }))
 {
     <div class="editor-label">

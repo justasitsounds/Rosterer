@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Rosterer.Domain.Events;
 
-namespace Rosterer.Domain
+namespace Rosterer.Domain.Entities
 {
-    public class CalendarEvent
+    public class CalendarBooking
     {
         private readonly List<User> _staff = new List<User>();
         private DateTime _endTime;
         private DateTime _startTime;
         private Venue _venue;
 
-        public CalendarEvent(DateTime start, DateTime end)
+        public CalendarBooking(DateTime start, DateTime end)
         {
             if (end < start)
                 throw new ArgumentOutOfRangeException("end", "Event cannot end before it starts");
@@ -21,7 +21,7 @@ namespace Rosterer.Domain
             PublishState = PublishState.Draft;
             LastModified = DateTime.Now;    
             PublishDate = DateTime.MinValue;
-            Id = "events/";
+            PropertyChanged();
         }
 
         public string Id { get; set; }
@@ -77,7 +77,7 @@ namespace Rosterer.Domain
 
         public void RemoveStaff(string email)
         {
-            if (!_staff.Any(s => s.EmailAddress == email)) return;
+            if (_staff.All(s => s.EmailAddress != email)) return;
             _staff.RemoveAll(u => u.EmailAddress == email);
             PropertyChanged();
         }
@@ -86,14 +86,14 @@ namespace Rosterer.Domain
         {
             PublishState = PublishState.Published;
             PublishDate = DateTime.Now;
-            DomainEvents.Raise(new EventPublishedEvent {PublishedEvent = this});
+            DomainEvents.Raise(new BookingPublishedEvent {PublishedBooking = this});
         }
 
         private void PropertyChanged()
         {
             PublishState = PublishState.Draft;
             LastModified = DateTime.Now;
-            DomainEvents.Raise(new EventModifiedEvent {ModifiedEvent = this});
+            DomainEvents.Raise(new BookingModifiedEvent {ModifiedBooking = this});
         }
     }
 

@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
 
 namespace Rosterer.Frontend.Controllers
 {
     public class HomeController : BaseController
     {
+        
         [Authorize]
         public ActionResult Index(int? month, int? year)
-        {   
-            //Logger.Debug("hey");
-            return View(new MonthModel(month ?? DateTime.Now.Month, year ?? DateTime.Now.Year));
+        {
+            var staff = AutoMapper.Mapper.Map<List<User>,List<StaffModel>>(RavenSession.Query<User>().ToList());
+            var venue = AutoMapper.Mapper.Map<List<Venue>,List<VenueModel>>(RavenSession.Query<Venue>().ToList());
+            return View(new HomeModel(staff,venue));
         }
 
         public ActionResult Help()
@@ -27,6 +30,7 @@ namespace Rosterer.Frontend.Controllers
             if (ModelState.IsValid)
             {
                 var venue = AutoMapper.Mapper.Map<VenueModel, Venue>(venueModel);
+                
                 RavenSession.Store(venue);
                 RavenSession.SaveChanges();
             }

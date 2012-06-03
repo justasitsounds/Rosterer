@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
 using Rosterer.Frontend.ObjectMappers;
 using Xunit;

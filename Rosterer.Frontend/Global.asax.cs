@@ -1,4 +1,6 @@
-﻿using System.Web;
+﻿using System;
+using System.Reflection;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.MicroKernel.Registration;
@@ -6,6 +8,8 @@ using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Raven.Abstractions.Data;
 using Raven.Client.Document;
+using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 using Rosterer.Frontend.ObjectMappers;
 using Rosterer.Frontend.Plumbing;
 
@@ -33,6 +37,11 @@ namespace Rosterer.Frontend
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
                 new {controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+                );
+            routes.MapRoute(
+                "Week",
+                "Week/{year}/{week}",
+                new { controller = "Week", action="Index"}
                 );
         }
 
@@ -63,6 +72,8 @@ namespace Rosterer.Frontend
             container.Register(Component.For<MyMembershipProvider>()
                 .LifeStyle.Transient
                 .Named("myProvider"));
+
+            DomainEvents.Container = container;
         }
 
         protected void Application_End()
@@ -81,6 +92,19 @@ namespace Rosterer.Frontend
                 .Install(FromAssembly.This());
             var controllerFactory = new WindsorControllerFactory(container);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+            container.Register(
+                Component.For<HttpSessionStateBase>()
+                .LifeStyle.PerWebRequest
+                .UsingFactoryMethod(() => new HttpSessionStateWrapper(HttpContext.Current.Session))
+                );
+            BasedOnDescriptor processes = AllTypes.FromAssembly(Assembly.GetAssembly(typeof (CalendarBooking)))
+                .BasedOn(typeof (IHandle<>))
+                .WithService.AllInterfaces().LifestylePerWebRequest()
+                ;
+            container.Register(processes);
+
+
+
         }
     }
 }

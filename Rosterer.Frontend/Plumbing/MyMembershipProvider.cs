@@ -7,6 +7,7 @@ using System.Web.Security;
 using Raven.Client;
 using Raven.Client.Linq;
 using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
 
 namespace Rosterer.Frontend.Plumbing

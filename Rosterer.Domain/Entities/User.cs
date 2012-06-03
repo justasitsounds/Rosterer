@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Rosterer.Domain
+namespace Rosterer.Domain.Entities
 {
     public class User
     {
@@ -13,7 +13,7 @@ namespace Rosterer.Domain
 
         public User()
         {
-            Id = "users/";
+            
         }
     }
 }

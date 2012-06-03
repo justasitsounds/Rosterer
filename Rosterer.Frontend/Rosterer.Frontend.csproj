@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\WeekController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LogController.cs" />
@@ -112,9 +113,13 @@
     <Compile Include="Installers\ControllerInstaller.cs" />
     <Compile Include="Installers\LoggerInstaller.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\EventModel.cs" />
+    <Compile Include="Models\CalendarDay.cs" />
+    <Compile Include="Models\CalendarWeek.cs" />
+    <Compile Include="Models\EventFormModel.cs" />
+    <Compile Include="Models\EventViewModel.cs" />
+    <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\LogFile.cs" />
-    <Compile Include="Models\MonthModel.cs" />
+    <Compile Include="Models\StaffModel.cs" />
     <Compile Include="Models\VenueModel.cs" />
     <Compile Include="ObjectMappers\AutoMapperConfiguration.cs" />
     <Compile Include="ObjectMappers\ModelToDomainMappingProfile.cs" />
@@ -126,6 +131,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\ajax-loader.gif" />
     <Content Include="Content\Images\pukara_logo.gif" />
     <Content Include="Content\rosterer.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -157,6 +163,7 @@
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\isodate.js" />
     <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.5.1.js" />
     <Content Include="Scripts\jquery-1.5.1.min.js" />
@@ -208,7 +215,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\Week.cshtml" />
+    <Content Include="Views\Week\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rosterer.Domain\Rosterer.Domain.csproj">
@@ -225,6 +232,8 @@
     <Content Include="Views\Home\VenueForm.cshtml" />
     <Content Include="Views\Log\Index.cshtml" />
     <Content Include="Views\Log\Details.cshtml" />
+    <None Include="Views\Shared\EventView.cshtml" />
+    <Content Include="Views\Shared\StaffMember.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

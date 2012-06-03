@@ -1,20 +1,13 @@
-﻿@using Rosterer.Domain
-@using Rosterer.Frontend.Models
-@model Rosterer.Frontend.Models.MonthModel
+﻿@using Rosterer.Frontend.Models
+@model HomeModel
+
 <div>
-    <h2>@Html.ActionLink("<", "Index", new { month = @Model.PreviousMonth.Month, year = @Model.PreviousMonth.Year }) 
-        @Model.MonthName @Model.Year 
-        @Html.ActionLink(">", "Index", new { month = @Model.NextMonth.Month, year = @Model.NextMonth.Year })
-        <a id="openVenueForm" class="linkbutton" style="float:right;margin:0px 8px;width:auto;">&nbsp;New Venue&nbsp;</a>
-        <a id="control" class="linkbutton" style="float:right">+</a>
-        </h2>
+    <div id="control" class="linkbutton" style="float:right">+</div>
+    <h2 id="thisMonth"></h2>
     
 </div>
 <div class="roster">
-    @foreach (CalendarWeek week in Model.CalendarWeeks)
-    {
-        @Html.Partial("Week", week)
-    }
+    <div id="progress"><img src="/Content/Images/ajax-loader.gif" alt="" /></div>
 </div>
 <div class="controlpanel">
     <h3>Controls</h3>
@@ -31,9 +24,25 @@
     <h5>Filter</h5>
     <fieldset>
         <legend>Users</legend>
+        <ul>
+            @foreach(var staffmember in Model.Staff)
+            {
+                <li style="background-color: @System.Drawing.ColorTranslator.ToHtml(staffmember.Color)">
+                    <input type="checkbox" name="staff" value="@staffmember.Id" checked="checked"/> @staffmember.Initials
+                </li>
+            }
+        </ul>
     </fieldset>
     <fieldset>
-        <legend>Events</legend>
+        <legend>Venues</legend>
+        <ul>
+            @foreach (var venueModel in Model.Venues)
+            {
+                <li>
+                    <input type="checkbox" name="staff" value="@venueModel.Id" checked="checked"/> @venueModel.Name
+                </li>
+            }
+        </ul>
     </fieldset>
 </div>
 
@@ -44,10 +53,11 @@
 <div id="eventform" title="Event">
    
 </div>
-<h2>Date</h2>
-<input type="text" class="date"/>
+@*<h2>Date</h2>
+<input type="text" class="date"/>*@
 @section Scripts
 {
+<script type="text/javascript " src="/Scripts/isodate.js"></script>
     <script type="text/javascript">
 
         var CloseVenueModal = function () {
@@ -59,17 +69,44 @@
             $('#eventform').html();
         };
 
+        var showProgress = function (element) {
+            $('#progress').show();
+        };
+        var hideProgress = function() {
+            $('#progress').hide();
+        };
+
+        var PopulateWeek = function (year, week) {  
+            //showProgress($(".roster"));
+            $.ajax({
+                type: "GET",
+                url: "Week?year=" + year + "&week=" + week,
+                async: false,
+                success: function (result) {
+                    $(".roster").append(result);
+                    hideProgress();
+                }
+            });
+
+        };
+
         $(document).ready(function () {
+
+            var d = new Date();
+            var newdate = new Date(d.getFullYear(), d.getMonth(), 1, 0, 0, 0, 1);
+            var weeknumber = newdate.getWeek(1);
+            for (var i = weeknumber; i <= weeknumber + 4; i++)
+                PopulateWeek(newdate.getFullYear(), i);
+            $('#thisMonth').html(newdate.getMonthName() + ' ' + newdate.getFullYear());
+
+
             $(".roster .week .day .addevent").click(
-                
-                
                 function () {
-                    
                     $("#eventform").dialog('open');
                     $.ajax({
-                        type: "POST",
-                        url: "Event/Index",
-                        data: { StartDate: $(this).parent().attr('title'), EndDate: $(this).parent().attr('title') },
+                        type: "GET",
+                        url: "Event/Create",
+                        data: { startDate: $(this).parent().attr('title') },
                         async: false,
 
                         success: function (result) {
@@ -81,7 +118,7 @@
                 }
 
             );
-            
+
             //$('.date').datetimepicker();
 
             var controlsOpen = false;

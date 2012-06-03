@@ -1,4 +1,4 @@
-﻿namespace Rosterer.Domain
+﻿namespace Rosterer.Domain.Entities
 {
     public class Venue
     {
@@ -9,7 +9,7 @@
 
         public Venue()
         {
-            Id = "venues/";
+            
         }
     }
 

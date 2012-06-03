@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
 
 namespace Rosterer.Frontend.ObjectMappers
@@ -28,6 +29,15 @@ namespace Rosterer.Frontend.ObjectMappers
                 .ForMember(model => model.State, opt => opt.MapFrom(venue => (State)Enum.Parse(typeof(State),venue.Location.State)))
                 .ForMember(model => model.Latitude, opt => opt.MapFrom(venue => venue.Location.Latitude))
                 .ForMember(model => model.Longitude, opt => opt.MapFrom(venue => venue.Location.Longitude))
+                ;
+            Mapper.CreateMap<User, StaffModel>()
+                .ForMember(staff => staff.Name,
+                           opt => opt.MapFrom(user => string.Format("{0} {1}", user.FirstName, user.LastName)))
+                .ForMember(staff => staff.Initials, opt => opt.MapFrom(user => string.Format("{0}{1}", user.FirstName.Substring(0,1), user.LastName.Substring(0,1))))
+                .ForMember(staff => staff.Color, opt => opt.MapFrom(user => user.DisplayColour));
+            Mapper.CreateMap<CalendarBooking, EventViewModel>()
+                .ForMember(eventview => eventview.End, opt => opt.MapFrom(booking => booking.EndTime))
+                .ForMember(eventview => eventview.Start, opt => opt.MapFrom(booking => booking.StartTime))
                 ;
         }
     }

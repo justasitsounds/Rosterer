@@ -56,10 +56,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalenderEventTests.cs" />
+    <Compile Include="CalendarWeekTests.cs" />
+    <Compile Include="CalenderBookingTests.cs" />
     <Compile Include="ControllerInstallerTests.cs" />
     <Compile Include="MapperTests\ModelMappingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

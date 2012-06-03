@@ -1,0 +1,12 @@
+﻿@model IList<Rosterer.Frontend.Models.EventViewModel>
+
+@foreach (var booking in Model)
+{
+    <div class="booking">
+        @foreach (var staffMember in booking.Staff)
+        {
+            Html.RenderPartial("StaffMember", staffMember);
+        }
+        <div class="venueName @booking.Venue.Id">@booking.Venue.Name</div>
+    </div>
+}

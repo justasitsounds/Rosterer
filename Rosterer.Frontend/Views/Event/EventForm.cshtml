@@ -1,6 +1,7 @@
-﻿@model Rosterer.Frontend.Models.EventModel
+﻿@model Rosterer.Frontend.Models.EventFormModel
 <h3>Event</h3>
 
+@Html.ValidationSummary(true, "Event creation was unsuccessful. Please correct the errors and try again.")
 @using (Ajax.BeginForm("Create","Event", new AjaxOptions() { OnSuccess = "CloseVenueModal", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }))
 {
     <div class="editor-label">
@@ -19,11 +20,11 @@
     </div>
     
     <div class="editor-label">
-        @Html.LabelFor(m => m.SelectedVenueId)
+        @Html.LabelFor(m => m.VenueId)
     </div>
     <div class="editor-field">
-        @Html.DropDownListFor(m => m.SelectedVenueId,Model.VenuesList)
-        @Html.ValidationMessageFor(m => m.SelectedVenueId)
+        @Html.DropDownListFor(m => m.VenueId,Model.VenuesList)
+        @Html.ValidationMessageFor(m => m.VenueId)
     </div>
     <div class="editor-label">
         @Html.LabelFor(m => m.StaffList)

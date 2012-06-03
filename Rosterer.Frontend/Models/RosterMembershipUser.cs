@@ -5,6 +5,7 @@ namespace Rosterer.Frontend.Models
 {
     public class RosterMembershipUser : MembershipUser
     {
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Color Color { get; set; }

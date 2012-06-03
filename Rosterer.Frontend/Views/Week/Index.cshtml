@@ -1,10 +1,11 @@
-﻿@using Rosterer.Domain
-@model Rosterer.Domain.CalendarWeek
+﻿@using Rosterer.Domain.Entities
+@using Rosterer.Frontend.Models
+@model CalendarWeek
 
-<div class="week">
+<div class="week" data-date="@Model.WeekNumber">
     @foreach (CalendarDay day in Model.Days)
     {
-        <div title="click to add event" class="day @if (day.IsToday())
+        <div id="@day.Date.Year-@day.Date.Month-@day.Date.Day" data-date="@day.Date" title="click to add event" class="day @if (day.IsToday())
                         {
                             @:today
                         }
@@ -13,7 +14,14 @@
                         @:wrongmonth
                     }">
             <h3 title="@day.Date">@day.Name<a href="#" class="addevent" title="add new event">+</a></h3>
-            <div class="dayContent"></div>
+            <div class="dayContent">
+                @{
+        if (day.Bookings != null)
+        {
+            Html.RenderPartial("EventView", day.Bookings);
+        }
+                }
+            </div>
             <div class="dayofmonth">
                 @day.Date.Day
             </div>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
 
 namespace Rosterer.Frontend.ObjectMappers
@@ -35,7 +36,15 @@ namespace Rosterer.Frontend.ObjectMappers
                                                                                          Latitude = r.Latitude
                                                                                      }));
 
-            ;
+            Mapper.CreateMap<EventFormModel, CalendarBooking>()
+                .ConstructUsing(x => new CalendarBooking(x.StartDate,x.EndDate))                
+                ;
+            Mapper.CreateMap<RosterMembershipUser, User>()
+                .ForMember(user => user.EmailAddress, opt => opt.MapFrom(roster => roster.Email))
+                .ForMember(user => user.FirstName, opt => opt.MapFrom(r => r.FirstName))
+                .ForMember(user => user.LastName, opt => opt.MapFrom(r => r.LastName))
+                .ForMember(user => user.DisplayColour, opt => opt.MapFrom(r => r.Color))
+                ;
         }
     }
 }

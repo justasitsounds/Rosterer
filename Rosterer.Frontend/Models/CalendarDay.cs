@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Rosterer.Domain.Entities;
 
-namespace Rosterer.Domain
+namespace Rosterer.Frontend.Models
 {
     public class CalendarDay
     {
@@ -9,6 +12,7 @@ namespace Rosterer.Domain
         public CalendarDay(DateTime date)
         {
             _date = date;
+            Bookings = new List<EventViewModel>();
         }
 
         public string Name
@@ -30,5 +34,17 @@ namespace Rosterer.Domain
         {
             return currentmonth == _date.Month;
         }
+
+        public List<EventViewModel> Bookings { get; set; }
+
+        public void LoadBookings(List<EventViewModel> candidateBookings)
+        {
+            var bookings = candidateBookings.Where(b => b.Start.Date == _date.Date);
+            foreach (var bookingModel in bookings)
+            {
+                Bookings.Add(bookingModel);
+            }
+        }
+        
     }
 }

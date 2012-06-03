@@ -2,88 +2,104 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using Rosterer.Domain;
+using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
 
 namespace Rosterer.Frontend.Controllers
 {
     public class EventController : BaseController
     {
-        //
-        // GET: /Event/
-        public ActionResult Index(EventModel eventModel)
+        public ISessionState CurrentEditSession { get; set; }
+
+        public ActionResult Index()
         {
-            //var eventModel = new EventModel();
-            eventModel.SetStaffList(
+            var bookings = RavenSession.Query<CalendarBooking>().Take(10).ToList();
+            return PartialView("EventView", AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings));            
+        }
+
+        // GET: /Event/List?start=date&end=date
+        [HttpGet]
+        public JsonResult List(DateTime start, DateTime end)
+        {
+            var bookings = RavenSession.Query<CalendarBooking>().Where(c => c.StartTime.Date >= start.Date && c.StartTime.Date < end.Date).ToList();
+            //return PartialView("EventView", AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings));
+            return Json(AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings), JsonRequestBehavior.AllowGet);
+        }
+        
+
+        // GET: /Event/Create
+        public ActionResult Create(DateTime startDate)
+        {
+            var eventFormModel = new EventFormModel();
+            eventFormModel.StartDate = eventFormModel.EndDate = startDate;
+            PopulateEventDropDowns(eventFormModel);
+
+            return PartialView("EventForm", eventFormModel);
+        }
+
+        private void PopulateEventDropDowns(EventFormModel eventFormModel)
+        {
+            eventFormModel.SetStaffList(
                 AutoMapper.Mapper.Map<IEnumerable<User>, IEnumerable<RosterMembershipUser>>(
                     RavenSession.Query<User>().ToList()));
-            eventModel.SetVenuesList(
+            eventFormModel.SetVenuesList(
                 AutoMapper.Mapper.Map<IEnumerable<Venue>, IEnumerable<VenueModel>>(
                     RavenSession.Query<Venue>().ToList()));
-            return PartialView("EventForm", eventModel);
         }
 
-        //
         // GET: /Event/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
-            return RedirectToAction("Index");
+            var eventModel = RavenSession.Load<CalendarBooking>(id);
+            var eventView = AutoMapper.Mapper.Map<CalendarBooking, EventViewModel>(eventModel);
+            return PartialView("EventView", new List<EventViewModel>() { eventView });
         }
 
-        //
-        // GET: /Event/Create
+        // POST: /Event/Create
         [HttpPost]
-        public ActionResult Create(EventModel eventModel)
+        public ActionResult Create(EventFormModel eventFormModel)
         {
+            PopulateEventDropDowns(eventFormModel);
+            
             if (ModelState.IsValid)
             {
-                //Save object
+                var newEvent = AutoMapper.Mapper.Map<EventFormModel, CalendarBooking>(eventFormModel);
+                newEvent.Venue = RavenSession.Load<Venue>(eventFormModel.VenueId);
+                foreach (var staffmember in eventFormModel.SelectedStaff)
+                {
+                    var user = RavenSession.Load<User>(staffmember);
+                    newEvent.AddStaff(user);
+                }
+                RavenSession.Store(newEvent);
+                RavenSession.SaveChanges();   
             }
             ModelState.Clear();
 
             if (Request.IsAjaxRequest())
-                return PartialView("EventForm", eventModel);
+                return PartialView("EventForm", eventFormModel);
             else
                 return RedirectToAction("Index","Home");
         } 
 
-        //
-        // POST: /Event/Create
-
         
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return RedirectToAction("Index");
-            }
-        }
-        
-        //
         // GET: /Event/Edit/5
- 
         public ActionResult Edit(int id)
         {
-            return RedirectToAction("Index");
+            return RedirectToAction("Create");
         }
 
-        //
+        
         // POST: /Event/Edit/5
-
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
             try
             {
                 // TODO: Add update logic here
- 
+
                 return RedirectToAction("Index");
             }
             catch
@@ -94,7 +110,6 @@ namespace Rosterer.Frontend.Controllers
 
         //
         // GET: /Event/Delete/5
- 
         public ActionResult Delete(int id)
         {
             return RedirectToAction("Index");
@@ -102,14 +117,13 @@ namespace Rosterer.Frontend.Controllers
 
         //
         // POST: /Event/Delete/5
-
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
             {
                 // TODO: Add delete logic here
- 
+
                 return RedirectToAction("Index");
             }
             catch
