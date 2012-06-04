@@ -2,12 +2,14 @@
 
 @foreach (var booking in Model)
 {
-    <div class="booking">
+    <div class="booking" id="@booking.Id">
         <div class="venueName @booking.Venue.Id">@booking.Venue.Name
         @foreach (var staffMember in booking.Staff)
         {
             Html.RenderPartial("StaffMember", staffMember);
         }
+        <a class="deletebooking pull-right" data-id="@booking.Id" href="#">
+        <i class="icon-minus-sign "></i></a>
         </div>
     </div>
 }

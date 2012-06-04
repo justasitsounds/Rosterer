@@ -3,7 +3,16 @@
 @{
     ViewBag.Title = "Error";
 }
-
+@section Navigation{
+<ul class="nav">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Help", "Help", "Home")</li>
+        @if (Request.IsAuthenticated)
+        {
+            <li>@Html.ActionLink("Create New User", "Register", "Account")</li>
+        }
+    </ul>
+}
 <h2>
     Sorry, an error occurred while processing your request.
 </h2>

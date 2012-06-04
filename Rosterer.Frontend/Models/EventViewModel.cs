@@ -7,6 +7,7 @@ namespace Rosterer.Frontend.Models
 {
     public class EventViewModel
     {
+        public string Id { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public VenueModel Venue { get; set; }

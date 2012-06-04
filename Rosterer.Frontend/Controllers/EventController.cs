@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using Rosterer.Domain;
 using Rosterer.Domain.Entities;
+using Rosterer.Domain.Extensions;
 using Rosterer.Frontend.Models;
 
 namespace Rosterer.Frontend.Controllers
@@ -22,11 +24,10 @@ namespace Rosterer.Frontend.Controllers
 
         // GET: /Event/List?start=date&end=date
         [HttpGet]
-        public JsonResult List(DateTime start, DateTime end)
+        public ActionResult List(DateTime start, DateTime end)
         {
             var bookings = RavenSession.Query<CalendarBooking>().Where(c => c.StartTime.Date >= start.Date && c.StartTime.Date < end.Date).ToList();
-            //return PartialView("EventView", AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings));
-            return Json(AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings), JsonRequestBehavior.AllowGet);
+            return PartialView("EventView", AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings));
         }
         
 
@@ -78,11 +79,17 @@ namespace Rosterer.Frontend.Controllers
                 
             }
             ModelState.Clear();
+            var day = new DateTime(eventFormModel.StartDate.Year, eventFormModel.StartDate.Month,
+                                   eventFormModel.StartDate.Day);
 
             if (Request.IsAjaxRequest())
             {
                 if (ModelState.IsValid)
-                    return Json(eventFormModel);
+                    return Json(new { 
+                        FormattedDate = eventFormModel.StartDate.YmdFormat(), 
+                        StartDate = day.ToString(CultureInfo.InvariantCulture),
+                        EndDate = day.AddDays(1).ToString(CultureInfo.InvariantCulture)
+                    });
                 return PartialView("EventForm", eventFormModel);
             }
             return RedirectToAction("Index", "Home");
@@ -113,27 +120,30 @@ namespace Rosterer.Frontend.Controllers
         }
 
         //
-        // GET: /Event/Delete/5
-        public ActionResult Delete(int id)
+        [HttpPost]
+        [Authorize]
+        public JsonResult Delete(string id)
         {
-            return RedirectToAction("Index");
+            var booking = RavenSession.Load<CalendarBooking>(id);
+            RavenSession.Delete(booking);
+            return Json(new { Success=true });
         }
 
         //
         // POST: /Event/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
+        //[HttpPost]
+        //public ActionResult Delete(int id, FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add delete logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return RedirectToAction("Index");
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return RedirectToAction("Index");
+        //    }
+        //}
     }
 }

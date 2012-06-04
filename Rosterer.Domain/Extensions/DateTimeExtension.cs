@@ -31,6 +31,10 @@ namespace Rosterer.Domain.Extensions
             return year;
         }
 
+        public static string YmdFormat(this DateTime date)
+        {
+            return string.Format("{0}-{1}-{2}",date.Year,date.Month,date.Day);
+        }
         
     }
 }

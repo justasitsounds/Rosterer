@@ -69,13 +69,28 @@
 
         var CloseVenueModal = function (data) {
             $("#venueform").modal('hide');
-            alert(data);
+        };
+
+        var epochToDate = function(jsonDate) {
+            var re = /-?\d+/;
+            var m = re.exec(jsonDate);
+            return new Date(parseInt(m[0]));
         };
 
         var CloseEventModal = function (data) {
             $("#eventform").modal('hide');
             $('#eventform').html();
-            alert(data.StartDate);
+
+            var start = data.StartDate;
+            var end = data.EndDate;
+            $.ajax({
+                type: "GET",
+                url: "Event/List?start=" + start + "&end=" + end,
+                async: false,
+                success: function (result) {
+                    $(".roster #" + data.FormattedDate + " .dayContent").html(result);
+                }
+            });
         };
 
         var showProgress = function (element) {
@@ -108,7 +123,6 @@
                 PopulateWeek(newdate.getFullYear(), i);
             $('#thisMonth').html(newdate.getMonthName() + ' ' + newdate.getFullYear());
 
-
             $(".roster .week .day .addevent").click(
                 function () {
                     $.ajax({
@@ -129,6 +143,24 @@
 
             );
 
+            $(".roster .week .day").on("click", ".deletebooking",
+                function (event) {
+                    var bookingId = $(this).data('id');
+                    if (confirm("Are you sure you want to delete this booking?")) {
+                        $.ajax({
+                            type: "POST",
+                            url: "Event/Delete",
+                            data: { id: bookingId },
+                            async: false,
+                            success: function(result) {
+                                if (result.Success) {
+                                    $("#" + bookingId).remove();
+                                }
+                            }
+                        });
+                    }
+                }
+            );
 
             $("#openVenueForm").click(function () {
                 $("#venueform").modal('show');
