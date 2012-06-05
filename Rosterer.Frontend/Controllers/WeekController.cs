@@ -10,7 +10,7 @@ namespace Rosterer.Frontend.Controllers
 {
     public class WeekController : BaseController
     {
-        // GET: /Week/year/week
+        // GET: /Week/year/month
         public ActionResult Index(int? year, int? week, int? targetMonth)
         {
             int yearnumber = year ?? DateTime.Now.Year;

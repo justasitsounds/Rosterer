@@ -76,6 +76,32 @@ namespace Rosterer.Frontend
             DomainEvents.Container = container;
         }
 
+        protected void Application_Error()
+        {
+            try
+            {
+                var exception = Server.GetLastError();
+                var logEntry = new LogEntry
+                {
+                    Date = DateTime.Now,
+                    Message = exception.Message,
+                    StackTrace = exception.StackTrace,
+                };
+
+                using (var datacontext = Store.OpenSession())
+                {
+                    datacontext.Store(logEntry);
+                    datacontext.SaveChanges();
+                }
+                
+                
+            }
+            catch (Exception)
+            {
+                // failed to record exception
+            }
+        }
+
         protected void Application_End()
         {
             container.Dispose();
