@@ -21,7 +21,7 @@ namespace Rosterer.Test
         [Fact]
         public void CalendarBookingsEndAfterTheyStart()
         {
-            DateTime start = DateTime.Now;
+            DateTime start = DateTime.Now.AddDays(1);
             DateTime end = start.AddHours(-1);
             Assert.Throws<ArgumentOutOfRangeException>(() => { new CalendarBooking(start, end); });
         }
