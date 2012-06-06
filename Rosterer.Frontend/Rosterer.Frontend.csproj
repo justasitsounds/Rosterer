@@ -233,7 +233,7 @@
     <Content Include="Views\Home\VenueForm.cshtml" />
     <Content Include="Views\Log\Index.cshtml" />
     <Content Include="Views\Log\Details.cshtml" />
-    <None Include="Views\Shared\EventView.cshtml" />
+    <Content Include="Views\Shared\EventView.cshtml" />
     <Content Include="Views\Shared\StaffMember.cshtml" />
   </ItemGroup>
   <ItemGroup>
