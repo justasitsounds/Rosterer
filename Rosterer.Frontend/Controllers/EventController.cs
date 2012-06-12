@@ -38,7 +38,7 @@ namespace Rosterer.Frontend.Controllers
             eventFormModel.StartDate = eventFormModel.EndDate = startDate;
             PopulateEventDropDowns(eventFormModel);
 
-            return PartialView("EventForm", eventFormModel);
+            return PartialView("Create", eventFormModel);
         }
 
         private void PopulateEventDropDowns(EventFormModel eventFormModel)
@@ -90,7 +90,7 @@ namespace Rosterer.Frontend.Controllers
                         StartDate = day.ToString(CultureInfo.InvariantCulture),
                         EndDate = day.AddDays(1).ToString(CultureInfo.InvariantCulture)
                     });
-                return PartialView("EventForm", eventFormModel);
+                return PartialView("Create", eventFormModel);
             }
             return RedirectToAction("Index", "Home");
         } 

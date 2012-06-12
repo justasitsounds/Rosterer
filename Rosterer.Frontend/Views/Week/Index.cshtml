@@ -1,12 +1,11 @@
 ﻿@using Rosterer.Domain.Entities
-@using Rosterer.Domain.Extensions
 @using Rosterer.Frontend.Models
 @model CalendarWeek
 
 <div class="week" data-date="@Model.WeekNumber">
     @foreach (CalendarDay day in Model.Days)
     {
-        <div id="@day.Date.YmdFormat()" data-date="@day.Date" title="click to add event" class="day @if (day.IsToday())
+        <div id="@day.Date.Year-@day.Date.Month-@day.Date.Day" data-date="@day.Date" title="click to add event" class="addevent day @if (day.IsToday())
                                                                                                                            {
                                                                                                                                @:today
                                                                                                                            }
@@ -14,9 +13,6 @@
                     {
                         @:wrongmonth
                     }">
-            <div class="day-header">
-                <h4 title="@day.Date">@day.Name<a href="#" class="addevent" title="add new event"><i class="icon-plus-sign"></i></a></h4>
-            </div>
             <div class="dayContent">
                 @{
                     if (day.Bookings != null)

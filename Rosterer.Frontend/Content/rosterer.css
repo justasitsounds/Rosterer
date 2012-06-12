@@ -1,29 +1,14 @@
 ﻿body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
-.roster {
+#rosterheader {
     width: 100%;
     float:left;
     display: block;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
 }
-.roster .week {
-    display: block;
-    overflow: hidden;
-    width: 100%
-}
-
-.roster .week .day {
-    -moz-border-radius: 3px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    float: left;
-    height: 180px;
-    margin: 2px;
-    position: relative;
-    width: 13%;
-}
-
-.roster .week .day .day-header 
+#rosterheader .day-header 
 {
     background-color: #FBFBFB;
     background-image: -moz-linear-gradient(center top , #FFFFFF, #F5F5F5);
@@ -39,8 +24,40 @@
      /* Opera 11.10+ */ 
      background: -o-linear-gradient(top,  #FFFFFF, #F5F5F5);
     border-bottom: 1px solid #DDDDDD;
-    padding: 2px 4px;
+     border-collapse: collapse;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    position: relative;                     
+    width: 14%;
 }
+#rosterheader .day-header h3 {
+    margin: 2px 4px;
+}
+
+.roster {
+    width: 100%;
+    float:left;
+    display: block;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+}
+.roster .week {
+    display: block;
+    overflow: hidden;
+    width: 100%
+}
+
+.roster .week .day {
+    border-collapse: collapse;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    float: left;
+    height: 180px;
+    position: relative;                     
+    width: 14%;
+}
+
 
 
 .roster .week .day h4 a {

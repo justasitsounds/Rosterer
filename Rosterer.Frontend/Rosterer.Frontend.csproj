@@ -235,7 +235,7 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>log4net1.cs</LastGenOutput>
     </None>
-    <Content Include="Views\Event\EventForm.cshtml" />
+    <Content Include="Views\Event\Create.cshtml" />
     <Content Include="Views\Home\VenueForm.cshtml" />
     <Content Include="Views\Log\Index.cshtml" />
     <Content Include="Views\Log\Details.cshtml" />

@@ -23,6 +23,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
                 <ul class="dropdown-menu admin">
                     <li>@Html.ActionLink("Create new user","Register","Account")</li>
+                    <li><a href="#" id="openVenueForm">Create New Venue</a></li>
                     <li class="divider"></li>
                     <li class="nav-header">Filter Users</li>
                     @foreach(var staffmember in Model.Staff)
@@ -50,10 +51,19 @@
 </div>
 
 <h2 id="thisMonth"></h2>
-<div class="roster">
-    <div id="progress"><img src="/Content/Images/ajax-loader.gif" alt="" /></div>
+<div id="rosterheader">
+    <div class="day-header"><h3>Monday</h3></div>
+    <div class="day-header"><h3>Tuesday</h3></div>
+    <div class="day-header"><h3>Wednesday</h3></div>
+    <div class="day-header"><h3>Thursday</h3></div>
+    <div class="day-header"><h3>Friday</h3></div>
+    <div class="day-header"><h3>Saturday</h3></div>
+    <div class="day-header"><h3>Sunday</h3></div>
 </div>
-
+<div class="roster">
+    
+</div>
+<div id="progress"><img src="/Content/Images/ajax-loader.gif" alt="" /></div>
 <div class="modal hide fade" id="venueform" title="New Venue">
     @Html.Partial("VenueForm", new VenueModel())
 </div>
@@ -93,7 +103,7 @@
             });
         };
 
-        var showProgress = function (element) {
+        var showProgress = function () {
             $('#progress').show();
         };
         var hideProgress = function() {
@@ -101,7 +111,7 @@
         };
 
         var PopulateWeek = function (year, week) {  
-            //showProgress($(".roster"));
+            showProgress($(".roster"));
             $.ajax({
                 type: "GET",
                 url: "Week?year=" + year + "&week=" + week,
@@ -114,21 +124,29 @@
 
         };
 
-        $(document).ready(function () {
-
-            var d = new Date();
-            var newdate = new Date(d.getFullYear(), d.getMonth(), 1, 0, 0, 0, 1);
+        var LoadMonth = function (year, month) {
+            $(".roster").html('');
+            var newdate = new Date(year, month, 1, 0, 0, 0, 1);
+            var prevmonth = month - 1;
             var weeknumber = newdate.getWeek(1);
             for (var i = weeknumber; i <= weeknumber + 4; i++)
                 PopulateWeek(newdate.getFullYear(), i);
-            $('#thisMonth').html(newdate.getMonthName() + ' ' + newdate.getFullYear());
+            $('#thisMonth').html('<a href="#" class="skipMonth" data-month="' + prevmonth + '" data-year="' + year + '">&lt;</a>' + newdate.getMonthName() + ' ' + newdate.getFullYear());
+        };
 
-            $(".roster .week .day .addevent").click(
+        $(document).ready(function () {
+
+            var d = new Date();
+            LoadMonth(d.getFullYear(), d.getMonth());
+
+            $(".roster .week .addevent").click(
+
                 function () {
+
                     $.ajax({
                         type: "GET",
                         url: "Event/Create",
-                        data: { startDate: $(this).parent().attr('title') },
+                        data: { startDate: $(this).data('date') },
                         async: false,
 
                         success: function (result) {
@@ -145,6 +163,7 @@
 
             $(".roster .week .day").on("click", ".deletebooking",
                 function (event) {
+                    event.stopPropagation();
                     var bookingId = $(this).data('id');
                     if (confirm("Are you sure you want to delete this booking?")) {
                         $.ajax({
@@ -152,7 +171,7 @@
                             url: "Event/Delete",
                             data: { id: bookingId },
                             async: false,
-                            success: function(result) {
+                            success: function (result) {
                                 if (result.Success) {
                                     $("#" + bookingId).remove();
                                 }
@@ -160,6 +179,14 @@
                         });
                     }
                 }
+            );
+
+            $("#thisMonth").on("click", "a.skipMonth",
+            function (event) {
+                var month = $(this).data('month');
+                var year = $(this).data('year');
+                LoadMonth(year, month);
+            }
             );
 
             $("#openVenueForm").click(function () {
