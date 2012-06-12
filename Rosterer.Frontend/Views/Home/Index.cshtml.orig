@@ -1,0 +1,210 @@
+﻿@using Rosterer.Frontend.Models
+@model HomeModel
+
+@section Navigation{
+    <ul class="nav">
+        <li class="active">@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Help", "Help", "Home")</li>
+        @if (Request.IsAuthenticated)
+        {
+            <li>@Html.ActionLink("Create New User", "Register", "Account")</li>
+        }
+    </ul>
+    <div class="nav-collapse">
+        <ul class="nav pull-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Book time off</a></li>
+                    <li><a href="#">Print</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                <ul class="dropdown-menu admin">
+                    <li>@Html.ActionLink("Create new user","Register","Account")</li>
+<<<<<<< HEAD
+                    <li><a href="#" id="openVenueForm">Create New Venue</a></li>
+=======
+                    <li><a href="#" id="openVenueForm">Create new venue</a></li>
+>>>>>>> 23b2b58e23292f1ac44532768398dc832c8cf740
+                    <li class="divider"></li>
+                    <li class="nav-header">Filter Users</li>
+                    @foreach(var staffmember in Model.Staff)
+            {
+                <li style="padding:3px 15px;">
+                    <input type="checkbox" name="staff" value="@staffmember.Id" checked="checked"/><span class="label" style="background-color: @System.Drawing.ColorTranslator.ToHtml(staffmember.Color)">@staffmember.Initials</span>
+                </li>
+            }
+                    <li class="divider"></li>
+                    <li class="nav-header">Filter Venues</li>
+                    @foreach (var venueModel in Model.Venues)
+            {
+                <li style="padding:3px 15px;">
+                    <input type="checkbox" name="venues" value="@venueModel.Id" checked="checked"/> @venueModel.Name
+                </li>
+            }
+                </ul>
+            </li>
+        </ul>
+    </div>
+}
+
+<div id="logindisplay">
+    @Html.Partial("_LogOnPartial")
+</div>
+
+<h2 id="thisMonth"></h2>
+<div id="rosterheader">
+    <div class="day-header"><h3>Monday</h3></div>
+    <div class="day-header"><h3>Tuesday</h3></div>
+    <div class="day-header"><h3>Wednesday</h3></div>
+    <div class="day-header"><h3>Thursday</h3></div>
+    <div class="day-header"><h3>Friday</h3></div>
+    <div class="day-header"><h3>Saturday</h3></div>
+    <div class="day-header"><h3>Sunday</h3></div>
+</div>
+<div class="roster">
+    
+</div>
+<div id="progress"><img src="/Content/Images/ajax-loader.gif" alt="" /></div>
+<div class="modal hide fade" id="venueform" title="New Venue">
+    @Html.Partial("VenueForm", new VenueModel())
+</div>
+
+<div class="modal hide fade" id="eventform" title="Event">
+   <p>event</p>
+</div>
+
+@section Scripts
+{
+<script type="text/javascript " src="/Scripts/isodate.js"></script>
+    <script type="text/javascript">
+
+        var CloseVenueModal = function (data) {
+            $("#venueform").modal('hide');
+        };
+
+        var epochToDate = function(jsonDate) {
+            var re = /-?\d+/;
+            var m = re.exec(jsonDate);
+            return new Date(parseInt(m[0]));
+        };
+
+        var CloseEventModal = function (data) {
+            $("#eventform").modal('hide');
+            $('#eventform').html();
+
+            var start = data.StartDate;
+            var end = data.EndDate;
+            $.ajax({
+                type: "GET",
+                url: "Event/List?start=" + start + "&end=" + end,
+                async: false,
+                success: function (result) {
+                    $(".roster #" + data.FormattedDate + " .dayContent").html(result);
+                }
+            });
+        };
+
+        var showProgress = function () {
+            $('#progress').show();
+        };
+        var hideProgress = function() {
+            $('#progress').hide();
+        };
+
+        var PopulateWeek = function (year, week) {  
+            showProgress($(".roster"));
+            $.ajax({
+                type: "GET",
+                url: "Week?year=" + year + "&week=" + week,
+                async: false,
+                success: function (result) {
+                    $(".roster").append(result);
+                    hideProgress();
+                }
+            });
+
+        };
+
+        var LoadMonth = function (year, month) {
+            $(".roster").html('');
+            var newdate = new Date(year, month, 1, 0, 0, 0, 1);
+            var prevmonth = month - 1;
+            var weeknumber = newdate.getWeek(1);
+            for (var i = weeknumber; i <= weeknumber + 4; i++)
+                PopulateWeek(newdate.getFullYear(), i);
+            $('#thisMonth').html('<a href="#" class="skipMonth" data-month="' + prevmonth + '" data-year="' + year + '">&lt;</a>' + newdate.getMonthName() + ' ' + newdate.getFullYear());
+        };
+
+        $(document).ready(function () {
+
+            var d = new Date();
+            LoadMonth(d.getFullYear(), d.getMonth());
+
+            $(".roster .week .addevent").click(
+
+                function () {
+
+                    $.ajax({
+                        type: "GET",
+                        url: "Event/Create",
+                        data: { startDate: $(this).data('date') },
+                        async: false,
+
+                        success: function (result) {
+                            // Replace the div's content with the page method's return.
+                            $("#eventform").html(result);
+                            $('.date').not('.hasDatePicker').datetimepicker();
+                            $("#eventform").modal('show');
+                            jQuery.validator.unobtrusive.parse('#eventform');
+                        }
+                    });
+                }
+
+            );
+
+            $(".roster .week .day").on("click", ".deletebooking",
+                function (event) {
+                    event.stopPropagation();
+                    var bookingId = $(this).data('id');
+                    if (confirm("Are you sure you want to delete this booking?")) {
+                        $.ajax({
+                            type: "POST",
+                            url: "Event/Delete",
+                            data: { id: bookingId },
+                            async: false,
+                            success: function (result) {
+                                if (result.Success) {
+                                    $("#" + bookingId).remove();
+                                }
+                            }
+                        });
+                    }
+                }
+            );
+
+            $("#thisMonth").on("click", "a.skipMonth",
+            function (event) {
+                var month = $(this).data('month');
+                var year = $(this).data('year');
+                LoadMonth(year, month);
+            }
+            );
+
+            $("#openVenueForm").click(function () {
+                $("#venueform").modal('show');
+            });
+
+            $("#closeVenueForm").click(function () {
+                CloseVenueModal();
+            });
+
+            //fix checkboxes collpasing drop-down nav
+            $('ul.dropdown-menu.admin li').click(function (event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+}

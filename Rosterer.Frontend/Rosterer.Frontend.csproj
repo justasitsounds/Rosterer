@@ -183,12 +183,6 @@
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
     <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -239,7 +233,7 @@
     <Content Include="Views\Home\VenueForm.cshtml" />
     <Content Include="Views\Log\Index.cshtml" />
     <Content Include="Views\Log\Details.cshtml" />
-    <None Include="Views\Shared\EventView.cshtml" />
+    <Content Include="Views\Shared\EventView.cshtml" />
     <Content Include="Views\Shared\StaffMember.cshtml" />
   </ItemGroup>
   <ItemGroup>
