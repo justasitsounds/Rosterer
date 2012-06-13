@@ -110,11 +110,11 @@
             $('#progress').hide();
         };
 
-        var PopulateWeek = function (year, week) {  
+        var PopulateWeek = function (year, week, month) {  
             showProgress($(".roster"));
             $.ajax({
                 type: "GET",
-                url: "Week?year=" + year + "&week=" + week,
+                url: "Week?year=" + year + "&week=" + week + '&targetMonth=' + month,
                 async: false,
                 success: function (result) {
                     $(".roster").append(result);
@@ -127,11 +127,17 @@
         var LoadMonth = function (year, month) {
             $(".roster").html('');
             var newdate = new Date(year, month, 1, 0, 0, 0, 1);
-            var prevmonth = month - 1;
+            var prevmonth = new Date(year, month, 1, 0, 0, 0, 1);
+            prevmonth.setMonth(month - 1);
+            var nextmonth = new Date(year, month, 1, 0, 0, 0, 1);
+            nextmonth.setMonth(month + 1);
             var weeknumber = newdate.getWeek(1);
             for (var i = weeknumber; i <= weeknumber + 4; i++)
-                PopulateWeek(newdate.getFullYear(), i);
-            $('#thisMonth').html('<a href="#" class="skipMonth" data-month="' + prevmonth + '" data-year="' + year + '">&lt;</a>' + newdate.getMonthName() + ' ' + newdate.getFullYear());
+                PopulateWeek(newdate.getFullYear(), i,newdate.getMonth()+1);
+            $('#thisMonth').html('<a href="#" class="skipMonth btn" data-month="' + prevmonth.getMonth() + '" data-year="' + prevmonth.getFullYear() + '">&lt;</a>'
+                + '&nbsp;<span>' + newdate.getMonthName() + ' ' + newdate.getFullYear() + '</span>&nbsp;'
+                + '<a href="#" class="skipMonth btn" data-month="' + nextmonth.getMonth() + '" data-year="' + nextmonth.getFullYear() + '">&gt;</a>'
+            );
         };
 
         $(document).ready(function () {
@@ -140,9 +146,7 @@
             LoadMonth(d.getFullYear(), d.getMonth());
 
             $(".roster .week .addevent").click(
-
                 function () {
-
                     $.ajax({
                         type: "GET",
                         url: "Event/Create",
