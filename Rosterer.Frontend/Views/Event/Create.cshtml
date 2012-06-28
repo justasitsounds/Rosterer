@@ -6,10 +6,10 @@
 @{
     Html.EnableClientValidation();
 }
-;
     @Html.ValidationSummary(true, "Event creation was unsuccessful. Please correct the errors and try again.")
     @using (Ajax.BeginForm("Create","Event", new AjaxOptions() { OnSuccess = "CloseEventModal", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }))
     {
+        @Html.HiddenFor(m => m.Id)
         <div class="modal-body">
         <div class="editor-label">
             @Html.LabelFor(m => m.StartDate)
@@ -43,7 +43,7 @@
       </div>
         <div class="modal-footer">
             <a href="#" class="btn" data-dismiss="modal">Close</a>   
-            <input type="submit" value="New Event" class="btn btn-primary"/>
+            <input type="submit" value="Save" class="btn btn-primary"/>
         </div>
     }
         

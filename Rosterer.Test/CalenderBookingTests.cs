@@ -74,7 +74,7 @@ namespace Rosterer.Test
             Assert.Equal(modifiedBooking,cEvent);
         }
         
-        [Fact(Skip="broken in production apparently")]
+        [Fact]
         public void ChangingEventPropertiesChangesPublishStateAndModifiedDate()
         {
             DateTime start = DateTime.Now;
@@ -90,7 +90,7 @@ namespace Rosterer.Test
             var updatedLastModifiedDate = cEvent.LastModified;
             //Assert.True(updatedLastModifiedDate > lastModifiedDate);
             cEvent.Publish();
-            Assert.True(cEvent.PublishDate > lastModifiedDate);
+            Assert.True(cEvent.PublishDate >= lastModifiedDate);
             Assert.Equal(cEvent.PublishState, PublishState.Published);
 
             cEvent.Venue = venue;

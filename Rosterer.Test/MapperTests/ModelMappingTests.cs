@@ -36,18 +36,16 @@ namespace Rosterer.Test.MapperTests
                                         FirstName = "james",
                                         LastName = "prendergast",
                                         Email = "james.prendergast@gmail.com",
-                                        Red = 0,
-                                        Green = 20,
-                                        Blue = 40
+                                        Color="#ffffff"
                                     };
 
             var user = Mapper.Map<RegisterModel, User>(registermodel);
             Assert.Equal(registermodel.FirstName,user.FirstName);
             Assert.Equal(registermodel.LastName,user.LastName);
             Assert.Equal(registermodel.Email,user.EmailAddress);
-            Assert.Equal(user.DisplayColour.R,(byte)registermodel.Red);
-            Assert.Equal(user.DisplayColour.G,(byte)registermodel.Green);
-            Assert.Equal(user.DisplayColour.B,(byte)registermodel.Blue);
+            Assert.Equal(user.DisplayColour.R,(byte)255);
+            Assert.Equal(user.DisplayColour.G,(byte)255);
+            Assert.Equal(user.DisplayColour.B,(byte)255);
 
             var venuemodel = new VenueModel() {Address1 = "somehwre"};
 

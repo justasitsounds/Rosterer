@@ -30,12 +30,12 @@ namespace Rosterer.Frontend.Models
         public IEnumerable<string> SelectedStaff { get; set; }
         public PublishState PublishState { get; set; }
         public IEnumerable<SelectListItem> VenuesList { get; set; }
-        public MultiSelectList StaffList { get; set; } 
+        public MultiSelectList StaffList { get; set; }
+
 
         public void SetVenuesList(IEnumerable<VenueModel> venues)
         {
             VenuesList = venues.Select(v => new SelectListItem() {Text = v.Name, Value = v.Id, Selected = v.Id == VenueId});
-            
         }
 
         public void SetStaffList(IEnumerable<RosterMembershipUser> staff)

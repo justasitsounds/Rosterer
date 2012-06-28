@@ -5,10 +5,6 @@
     <ul class="nav">
         <li class="active">@Html.ActionLink("Home", "Index", "Home")</li>
         <li>@Html.ActionLink("Help", "Help", "Home")</li>
-        @if (Request.IsAuthenticated)
-        {
-            <li>@Html.ActionLink("Create New User", "Register", "Account")</li>
-        }
     </ul>
     <div class="nav-collapse">
         <ul class="nav pull-right">
@@ -27,19 +23,19 @@
                     <li class="divider"></li>
                     <li class="nav-header">Filter Users</li>
                     @foreach(var staffmember in Model.Staff)
-            {
-                <li style="padding:3px 15px;">
-                    <input type="checkbox" name="staff" value="@staffmember.Id" checked="checked"/><span class="label" style="background-color: @System.Drawing.ColorTranslator.ToHtml(staffmember.Color)">@staffmember.Initials</span>
-                </li>
-            }
+                    {
+                    <li style="padding:3px 15px;">
+                        <input type="checkbox" name="staff" value="@staffmember.Id" checked="checked"/><span class="label" style="background-color: @System.Drawing.ColorTranslator.ToHtml(staffmember.Color)">@staffmember.Initials</span>
+                    </li>
+                    }
                     <li class="divider"></li>
                     <li class="nav-header">Filter Venues</li>
                     @foreach (var venueModel in Model.Venues)
-            {
-                <li style="padding:3px 15px;">
-                    <input type="checkbox" name="venues" value="@venueModel.Id" checked="checked"/> @venueModel.Name
-                </li>
-            }
+                    {
+                    <li style="padding:3px 15px;">
+                        <input type="checkbox" name="venues" value="@venueModel.Id" checked="checked"/> @venueModel.Name
+                    </li>
+                    }
                 </ul>
             </li>
         </ul>
@@ -65,7 +61,7 @@
 </div>
 <div id="progress"><img src="/Content/Images/ajax-loader.gif" alt="" /></div>
 <div class="modal hide fade" id="venueform" title="New Venue">
-    @Html.Partial("VenueForm", new VenueModel())
+    <p>venue</p>
 </div>
 
 <div class="modal hide fade" id="eventform" title="Event">
@@ -79,6 +75,7 @@
 
         var CloseVenueModal = function (data) {
             $("#venueform").modal('hide');
+            $('#venueform').html();
         };
 
         var epochToDate = function(jsonDate) {
@@ -145,8 +142,8 @@
             var d = new Date();
             LoadMonth(d.getFullYear(), d.getMonth());
 
-            $(".roster .week .addevent").click(
-                function () {
+            $(".roster").on("click", ".week .addevent",
+                function (event) {
                     $.ajax({
                         type: "GET",
                         url: "Event/Create",
@@ -185,6 +182,24 @@
                 }
             );
 
+            $(".roster .week .day").on("click", ".editbooking",
+                function (event) {
+                    event.stopPropagation();
+                    var bookingId = $(this).data('id');
+                    $.ajax({
+                        type: "GET",
+                        url: "Event/Edit",
+                        data: { id: bookingId },
+                        async: false,
+                        success: function (result) {
+                            $("#eventform").html(result);
+                            $("#eventform").modal('show');
+                            jQuery.validator.unobtrusive.parse('#eventform');
+                        }
+                    });
+                }
+            );
+
             $("#thisMonth").on("click", "a.skipMonth",
             function (event) {
                 var month = $(this).data('month');
@@ -192,9 +207,19 @@
                 LoadMonth(year, month);
             }
             );
-
+           
             $("#openVenueForm").click(function () {
-                $("#venueform").modal('show');
+                $.ajax({
+                    type: "GET",
+                    url: "Venue/Create",
+                    async: false,
+                    success: function (result) {
+                        // Replace the div's content with the page method's return.
+                        $("#venueform").html(result);
+                        $("#venueform").modal('show');
+                        jQuery.validator.unobtrusive.parse('#venueform');
+                    }
+                });
             });
 
             $("#closeVenueForm").click(function () {

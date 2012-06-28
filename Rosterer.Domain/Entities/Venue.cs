@@ -6,6 +6,7 @@
         public string Name { get; set; }
         public Location Location { get; set; }
         public string Notes { get; set; }
+        public Region Region { get; set; }
 
         public Venue()
         {

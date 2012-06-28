@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using AutoMapper;
 using Rosterer.Domain;
 using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
+using Region = Rosterer.Domain.Entities.Region;
 
 namespace Rosterer.Frontend.ObjectMappers
 {
@@ -23,6 +25,8 @@ namespace Rosterer.Frontend.ObjectMappers
                 .ForMember(rosterUser => rosterUser.Email, opt => opt.MapFrom(user => user.EmailAddress))
                 .ForMember(rosterUser => rosterUser.UserName, opt => opt.MapFrom(user => user.EmailAddress))
                 ;
+            Mapper.CreateMap<Region, RegionModel>()
+                .ForMember(model => model.HexColor, opt => opt.MapFrom(domain => ColorTranslator.ToHtml(domain.Color)));
             Mapper.CreateMap<Venue, VenueModel>()
                 .ForMember(model => model.Address1, opt => opt.MapFrom(venue => venue.Location.Address1))
                 .ForMember(model => model.Address2, opt => opt.MapFrom(venue => venue.Location.Address2))
@@ -39,6 +43,13 @@ namespace Rosterer.Frontend.ObjectMappers
                 .ForMember(eventview => eventview.End, opt => opt.MapFrom(booking => booking.EndTime))
                 .ForMember(eventview => eventview.Start, opt => opt.MapFrom(booking => booking.StartTime))
                 ;
+            Mapper.CreateMap<CalendarBooking, EventFormModel>()
+                .ForMember(eventview => eventview.EndDate, opt => opt.MapFrom(booking => booking.EndTime))
+                .ForMember(eventview => eventview.StartDate, opt => opt.MapFrom(booking => booking.StartTime))
+                .ForMember(eventview => eventview.SelectedStaff, opt => opt.MapFrom(booking => booking.Staff.Select(s => s.Id)))
+                .ForMember(eventview => eventview.VenueId, opt => opt.MapFrom(booking => booking.Venue.Id))
+                ;
+            
         }
     }
 }

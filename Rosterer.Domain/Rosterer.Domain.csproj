@@ -61,6 +61,7 @@
     <Compile Include="Crypto\BCrypt.cs" />
     <Compile Include="DomainEvents.cs" />
     <Compile Include="Entities\LogEntry.cs" />
+    <Compile Include="Entities\Region.cs" />
     <Compile Include="Events\BookingModifiedEvent.cs" />
     <Compile Include="Events\BookingPublishedEvent.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />

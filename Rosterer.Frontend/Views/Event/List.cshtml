@@ -1,0 +1,6 @@
+@model IList<Rosterer.Frontend.Models.EventViewModel>
+
+@foreach (var booking in Model)
+{
+    Html.RenderPartial("/Views/Event/Index.cshtml", booking);
+}

@@ -14,20 +14,12 @@ namespace Rosterer.Frontend.Controllers
 {
     public class EventController : BaseController
     {
-        public ISessionState CurrentEditSession { get; set; }
-
-        public ActionResult Index()
-        {
-            var bookings = RavenSession.Query<CalendarBooking>().Take(10).ToList();
-            return PartialView("EventView", AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings));            
-        }
-
         // GET: /Event/List?start=date&end=date
         [HttpGet]
         public ActionResult List(DateTime start, DateTime end)
         {
             var bookings = RavenSession.Query<CalendarBooking>().Where(c => c.StartTime.Date >= start.Date && c.StartTime.Date < end.Date).ToList();
-            return PartialView("EventView", AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings));
+            return PartialView("List", AutoMapper.Mapper.Map<IList<CalendarBooking>, IList<EventViewModel>>(bookings));
         }
         
 
@@ -37,7 +29,7 @@ namespace Rosterer.Frontend.Controllers
             var eventFormModel = new EventFormModel();
             eventFormModel.StartDate = eventFormModel.EndDate = startDate;
             PopulateEventDropDowns(eventFormModel);
-
+            
             return PartialView("Create", eventFormModel);
         }
 
@@ -49,14 +41,19 @@ namespace Rosterer.Frontend.Controllers
             eventFormModel.SetVenuesList(
                 AutoMapper.Mapper.Map<IEnumerable<Venue>, IEnumerable<VenueModel>>(
                     RavenSession.Query<Venue>().ToList()));
+            
         }
 
         // GET: /Event/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Index(string id)
         {
-            var eventModel = RavenSession.Load<CalendarBooking>(id);
-            var eventView = AutoMapper.Mapper.Map<CalendarBooking, EventViewModel>(eventModel);
-            return PartialView("EventView", new List<EventViewModel>() { eventView });
+            CalendarBooking booking;
+            if (string.IsNullOrEmpty(id))
+                booking = RavenSession.Query<CalendarBooking>().SingleOrDefault();
+            else
+                booking = RavenSession.Load<CalendarBooking>(id);
+            var eventView = AutoMapper.Mapper.Map<CalendarBooking, EventViewModel>(booking);
+            return PartialView("Index",  eventView);
         }
 
         // POST: /Event/Create
@@ -74,8 +71,10 @@ namespace Rosterer.Frontend.Controllers
                     var user = RavenSession.Load<User>(staffmember);
                     newEvent.AddStaff(user);
                 }
+                
                 RavenSession.Store(newEvent);
-                RavenSession.SaveChanges();
+                var regevents = CurrentEditSession.RegisteredEvents;
+                //RavenSession.SaveChanges();
                 
             }
             ModelState.Clear();
@@ -97,15 +96,17 @@ namespace Rosterer.Frontend.Controllers
 
         
         // GET: /Event/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
-            return RedirectToAction("Create");
+            var model = AutoMapper.Mapper.Map<CalendarBooking, EventFormModel>(RavenSession.Load<CalendarBooking>(id));
+            PopulateEventDropDowns(model);
+            return PartialView("Create", model);
         }
 
         
         // POST: /Event/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(string id, FormCollection collection)
         {
             try
             {

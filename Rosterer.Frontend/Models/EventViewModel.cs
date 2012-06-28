@@ -12,5 +12,6 @@ namespace Rosterer.Frontend.Models
         public DateTime End { get; set; }
         public VenueModel Venue { get; set; }
         public IEnumerable<StaffModel> Staff { get; set; }
+        
     }
 }

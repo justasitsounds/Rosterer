@@ -65,18 +65,11 @@ namespace Rosterer.Frontend.Models
         public string ConfirmPassword { get; set; }
 
         [Required]
-        [Range(0,255,ErrorMessage = "Valid colour values range from 0 to 255")]
-        [Display(Name = "Red Component",GroupName = "Color")]
-        public short Red { get; set; }
+        [DataType(DataType.Text)]
+        [Display(Name="Choose a colour")]
+        public string Color { get; set; }
 
-        [Required]
-        [Range(0, 255, ErrorMessage = "Valid colour values range from 0 to 255")]
-        [Display(Name = "Green Component", GroupName = "Color")]
-        public short Green { get; set; }
+        
 
-        [Required]
-        [Range(0, 255, ErrorMessage = "Valid colour values range from 0 to 255")]
-        [Display(Name = "Green Component", GroupName = "Color")]
-        public short Blue { get; set; }
     }
 }

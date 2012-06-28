@@ -5,19 +5,22 @@
 <div class="week" data-date="@Model.WeekNumber">
     @foreach (CalendarDay day in Model.Days)
     {
-        <div id="@day.Date.Year-@day.Date.Month-@day.Date.Day" data-date="@day.Date" title="click to add event" class="addevent day @if (day.IsToday())
-                                                                                                                           {
-                                                                                                                               @:today
-                                                                                                                           }
-                    @if (!day.IsInCurrentMonth(Model.Monthnumber))
-                    {
-                        @:wrongmonth
-                    }">
+        <div id="@day.Date.Year-@day.Date.Month-@day.Date.Day" 
+             data-date="@day.Date" 
+             title="click to add event" 
+             class="addevent day @if (day.IsToday())
+                                    {
+                                        @:today
+                                    }
+                                @if (!day.IsInCurrentMonth(Model.Monthnumber))
+                                {
+                                    @:wrongmonth
+                                }">
             <div class="dayContent">
                 @{
-                    if (day.Bookings != null)
-                    {
-                        Html.RenderPartial("~/Views/Shared/EventView.cshtml", day.Bookings);
+                    if (day.Bookings != null && day.Bookings.Count>0)
+                    {                        
+                        Html.RenderPartial("/Views/Event/List.cshtml", day.Bookings);
                     }
                 }
             </div>

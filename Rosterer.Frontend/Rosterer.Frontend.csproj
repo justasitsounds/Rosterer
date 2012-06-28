@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Controllers\WeekController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Models\EventViewModel.cs" />
     <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\LogFile.cs" />
+    <Compile Include="Models\RegionModel.cs" />
     <Compile Include="Models\StaffModel.cs" />
     <Compile Include="Models\VenueModel.cs" />
     <Compile Include="ObjectMappers\AutoMapperConfiguration.cs" />
@@ -177,13 +179,11 @@
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
     <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
+    <Content Include="Scripts\jquery.simple-color.min.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\modernizr-1.7.js" />
-    <Content Include="Scripts\modernizr-1.7.min.js" />
     <Content Include="Web.config" />
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -230,11 +230,16 @@
       <LastGenOutput>log4net1.cs</LastGenOutput>
     </None>
     <Content Include="Views\Event\Create.cshtml" />
-    <Content Include="Views\Home\VenueForm.cshtml" />
+    <Content Include="Views\Venue\Create.cshtml" />
     <Content Include="Views\Log\Index.cshtml" />
     <Content Include="Views\Log\Details.cshtml" />
-    <Content Include="Views\Shared\EventView.cshtml" />
     <Content Include="Views\Shared\StaffMember.cshtml" />
+    <Content Include="Views\Event\Index.cshtml" />
+    <Content Include="Views\Event\List.cshtml" />
+    <Content Include="Views\Venue\Index.cshtml" />
+    <Content Include="Views\Venue\Details.cshtml" />
+    <Content Include="Views\Venue\Edit.cshtml" />
+    <Content Include="Views\Venue\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

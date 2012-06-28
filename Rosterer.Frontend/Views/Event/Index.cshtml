@@ -1,0 +1,16 @@
+﻿@model Rosterer.Frontend.Models.EventViewModel
+
+<div class="booking well-small" id="@Model.Id" style="background-color: @Model.Venue.RegionName">
+    <div class="venueName @Model.Venue.Id">@Model.Venue.Name
+        @foreach (var staffMember in Model.Staff)
+        {
+            Html.RenderPartial("StaffMember", staffMember);
+        }
+        
+        <a class="deletebooking pull-right" title="delete booking" data-id="@Model.Id" href="#">
+            <i class="icon-minus-sign "></i></a>
+        <a class="editbooking pull-right" title="edit booking" data-id="@Model.Id" href="#">
+            <i class="icon-pencil "></i></a>
+    </div>
+</div>
+

@@ -10,30 +10,37 @@ namespace Rosterer.Domain
 {
     public class EditSession : ISessionState
     {
-        private List<CalendarBooking> ModifiedEvents { get; set; }
+        private readonly List<CalendarBooking> _modifiedEvents;
         private readonly HttpSessionStateBase session;
 
         public EditSession(HttpSessionStateBase session)
         {
             this.session = session;
-            ModifiedEvents = new List<CalendarBooking>();
+            if (session["modifiedEvents"] != null)
+            {
+                _modifiedEvents = session["modifiedEvents"] as List<CalendarBooking>;
+            }
+            else
+            {
+                _modifiedEvents = new List<CalendarBooking>();
+            }
         }
 
         public void Handle(BookingModifiedEvent args)
         {
-            if (ModifiedEvents.Any(e => args.ModifiedBooking.Id == e.Id)) return;
-            ModifiedEvents.Add(args.ModifiedBooking);
+            if (_modifiedEvents.Any(e => args.ModifiedBooking.Id == e.Id)) return;
+            _modifiedEvents.Add(args.ModifiedBooking);
         }
 
         public IList<string> RegisteredEvents
         {
-            get { return ModifiedEvents.Select(e => e.ToString()).ToList(); }
+            get { return _modifiedEvents.Select(e => e.Id).ToList(); }
         }
 
         public void Publish()
         {
-            ModifiedEvents.ForEach(e => e.Publish());
-            ModifiedEvents.Clear();
+            _modifiedEvents.ForEach(e => e.Publish());
+            _modifiedEvents.Clear();
         }
 
         public void Clear()
