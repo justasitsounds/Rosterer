@@ -59,12 +59,14 @@
   <ItemGroup>
     <Compile Include="Entities\CalendarBooking.cs" />
     <Compile Include="Crypto\BCrypt.cs" />
-    <Compile Include="DomainEvents.cs" />
+    <Compile Include="Events\IHandle.cs" />
     <Compile Include="Entities\LogEntry.cs" />
     <Compile Include="Entities\Region.cs" />
     <Compile Include="Events\BookingModifiedEvent.cs" />
     <Compile Include="Events\BookingPublishedEvent.cs" />
+    <Compile Include="Events\DomainEvents.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
+    <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EditSession.cs" />
     <Compile Include="Entities\User.cs" />

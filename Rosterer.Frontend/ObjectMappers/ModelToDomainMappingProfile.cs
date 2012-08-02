@@ -31,14 +31,11 @@ namespace Rosterer.Frontend.ObjectMappers
                                                                                      {
                                                                                          Address1 = r.Address1,
                                                                                          Address2 = r.Address2,
-                                                                                         State = Enum.GetName(typeof(State),r.State),
                                                                                          Longitude = r.Longitude,
                                                                                          Latitude = r.Latitude
                                                                                      }));
 
-            Mapper.CreateMap<EventFormModel, CalendarBooking>()
-                .ConstructUsing(x => new CalendarBooking(x.StartDate,x.EndDate))                
-                ;
+
             Mapper.CreateMap<RosterMembershipUser, User>()
                 .ForMember(user => user.EmailAddress, opt => opt.MapFrom(roster => roster.Email))
                 .ForMember(user => user.FirstName, opt => opt.MapFrom(r => r.FirstName))

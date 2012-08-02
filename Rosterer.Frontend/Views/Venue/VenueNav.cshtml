@@ -1,0 +1,23 @@
+﻿@using Rosterer.Domain.Entities
+@model List<Rosterer.Frontend.Models.VenueModel>
+@{
+    Layout = null;
+    string currentRegion = string.Empty;
+    
+}
+
+@foreach (var venueModel in Model.OrderBy(venue => venue.SelectedRegion))
+{
+ if(venueModel.SelectedRegion.ToString()!=currentRegion)
+ {
+     <li class="nav-header">
+         @(venueModel.SelectedRegion.ToString())
+     </li>
+ }   
+    <li style="padding:3px 15px;" class="venuelist">
+        <input type="checkbox" name="venues" value="@venueModel.Id" checked="checked"/> @venueModel.Name
+    </li>
+    {
+        currentRegion = venueModel.SelectedRegion.ToString();
+    }
+}

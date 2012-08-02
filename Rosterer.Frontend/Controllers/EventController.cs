@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using System.Web.Security;
 using Rosterer.Domain;
 using Rosterer.Domain.Entities;
 using Rosterer.Domain.Extensions;
@@ -64,8 +65,12 @@ namespace Rosterer.Frontend.Controllers
             
             if (ModelState.IsValid)
             {
-                var newEvent = AutoMapper.Mapper.Map<EventFormModel, CalendarBooking>(eventFormModel);
-                newEvent.Venue = RavenSession.Load<Venue>(eventFormModel.VenueId);
+                var rosterMembershipUser = (RosterMembershipUser) Membership.GetUser();
+                var domainUser =
+                    AutoMapper.Mapper.Map<RosterMembershipUser, User>(rosterMembershipUser);
+                var venue = RavenSession.Load<Venue>(eventFormModel.VenueId);
+                var newEvent = new CalendarBooking(eventFormModel.StartDate, eventFormModel.EndDate, domainUser.Id,venue);
+
                 foreach (var staffmember in eventFormModel.SelectedStaff)
                 {
                     var user = RavenSession.Load<User>(staffmember);
@@ -73,9 +78,8 @@ namespace Rosterer.Frontend.Controllers
                 }
                 
                 RavenSession.Store(newEvent);
+                RavenSession.SaveChanges();
                 var regevents = CurrentEditSession.RegisteredEvents;
-                //RavenSession.SaveChanges();
-                
             }
             ModelState.Clear();
             var day = new DateTime(eventFormModel.StartDate.Year, eventFormModel.StartDate.Month,
@@ -127,6 +131,7 @@ namespace Rosterer.Frontend.Controllers
         {
             var booking = RavenSession.Load<CalendarBooking>(id);
             RavenSession.Delete(booking);
+            RavenSession.SaveChanges();
             return Json(new { Success=true });
         }
 

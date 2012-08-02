@@ -113,6 +113,7 @@
     </Compile>
     <Compile Include="Installers\ControllerInstaller.cs" />
     <Compile Include="Installers\LoggerInstaller.cs" />
+    <Compile Include="Installers\RavenInstaller.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\CalendarDay.cs" />
     <Compile Include="Models\CalendarWeek.cs" />
@@ -120,7 +121,6 @@
     <Compile Include="Models\EventViewModel.cs" />
     <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\LogFile.cs" />
-    <Compile Include="Models\RegionModel.cs" />
     <Compile Include="Models\StaffModel.cs" />
     <Compile Include="Models\VenueModel.cs" />
     <Compile Include="ObjectMappers\AutoMapperConfiguration.cs" />
@@ -129,6 +129,8 @@
     <Compile Include="Plumbing\CompareDatesAttribute.cs" />
     <Compile Include="Plumbing\MyMembershipProvider.cs" />
     <Compile Include="Models\RosterMembershipUser.cs" />
+    <Compile Include="Plumbing\RosterRoleProvider.cs" />
+    <Compile Include="Plumbing\WindsorRoleProvider.cs" />
     <Compile Include="Plumbing\WindsorControllerFactory.cs" />
     <Compile Include="Plumbing\WindsorMembershipProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -236,10 +238,10 @@
     <Content Include="Views\Shared\StaffMember.cshtml" />
     <Content Include="Views\Event\Index.cshtml" />
     <Content Include="Views\Event\List.cshtml" />
-    <Content Include="Views\Venue\Index.cshtml" />
     <Content Include="Views\Venue\Details.cshtml" />
     <Content Include="Views\Venue\Edit.cshtml" />
     <Content Include="Views\Venue\Delete.cshtml" />
+    <Content Include="Views\Venue\VenueNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

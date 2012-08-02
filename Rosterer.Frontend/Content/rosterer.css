@@ -89,6 +89,12 @@ form {
     margin-right: 4px;
     margin-bottom: 4px;
 }
+.booking.Draft {
+    opacity: .5;
+    filter: alpha(opacity=50);
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    border-style: dotted;
+}
 .booking .venueName {
     font-weight: bold;
 }

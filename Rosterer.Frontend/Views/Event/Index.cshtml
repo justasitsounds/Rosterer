@@ -1,6 +1,9 @@
-﻿@model Rosterer.Frontend.Models.EventViewModel
+﻿@using Rosterer.Domain.Entities
+@model Rosterer.Frontend.Models.EventViewModel
 
-<div class="booking well-small" id="@Model.Id" style="background-color: @Model.Venue.RegionName">
+<div class="booking well-small @Model.PublishState.ToString()" id="@Model.Id" style="background-color: @Model.Venue.SelectedRegion"
+title="Publish State: @Model.PublishState.ToString()"
+    >
     <div class="venueName @Model.Venue.Id">@Model.Venue.Name
         @foreach (var staffMember in Model.Staff)
         {

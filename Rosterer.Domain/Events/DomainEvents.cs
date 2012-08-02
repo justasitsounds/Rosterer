@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Castle.Windsor;
 
-namespace Rosterer.Domain
+namespace Rosterer.Domain.Events
 {
     /// <summary>
     /// http://www.udidahan.com/2009/06/14/domain-events-salvation/
@@ -10,7 +10,7 @@ namespace Rosterer.Domain
     public static class DomainEvents
     {
         [ThreadStatic] //so that each thread has its own callbacks
-        private static List<Delegate> _actions;
+            private static List<Delegate> _actions;
 
         public static IWindsorContainer Container { get; set; } //as before
 
@@ -40,15 +40,5 @@ namespace Rosterer.Domain
                     if (action is Action<T>)
                         ((Action<T>) action)(args);
         }
-    }
-
-    public interface IDomainEvent
-    {
-    }
-
-    public interface IHandle<T> where T : IDomainEvent
-    {
-        void Handle(T args);
-        IList<string> RegisteredEvents { get; }
     }
 }

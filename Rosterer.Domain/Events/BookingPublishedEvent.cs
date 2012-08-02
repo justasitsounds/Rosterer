@@ -10,4 +10,6 @@ namespace Rosterer.Domain.Events
     {
         public CalendarBooking PublishedBooking { get; set; }
     }
+
+    
 }

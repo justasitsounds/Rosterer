@@ -34,16 +34,10 @@
         </div>
         <div class="column">
             <div class="editor-label">
-                @Html.LabelFor(m => m.State)
+                @Html.LabelFor(m => m.SelectedRegion)
             </div>
             <div class="editor-field">
-                @Html.DropDownListFor(m => m.State,new SelectList(Enum.GetNames(typeof(State))))
-            </div>
-            <div class="editor-label">
-                @Html.LabelFor(m => m.RegionName)
-            </div>
-            <div class="editor-field">
-                @Html.DropDownListFor(m => m.RegionName,Model.RegionList)
+                @Html.DropDownListFor(m => m.SelectedRegion,Model.RegionList)
             </div>
             <div class="editor-label">
                 @Html.LabelFor(m => m.Notes)

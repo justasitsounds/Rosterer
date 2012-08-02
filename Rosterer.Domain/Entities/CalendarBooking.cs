@@ -12,17 +12,21 @@ namespace Rosterer.Domain.Entities
         private DateTime _startTime;
         private Venue _venue;
 
-        public CalendarBooking(DateTime start, DateTime end)
+        public CalendarBooking(DateTime start, DateTime end, string bookingOwnerId, Venue venue)
         {
             if (end < start)
                 throw new ArgumentOutOfRangeException("end", "Event cannot end before it starts");
             _startTime = start;
             _endTime = end;
             PublishState = PublishState.Draft;
-            LastModified = DateTime.Now;    
+            LastModified = DateTime.Now;
             PublishDate = DateTime.MinValue;
+            BookingOwnerId = bookingOwnerId;
+            _venue = venue;
             PropertyChanged();
         }
+
+        public string BookingOwnerId { get; private set; }
 
         public string Id { get; set; }
 

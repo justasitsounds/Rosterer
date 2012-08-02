@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Rosterer.Domain.Entities;
 
 namespace Rosterer.Frontend.Models
 {
@@ -12,6 +13,7 @@ namespace Rosterer.Frontend.Models
         public DateTime End { get; set; }
         public VenueModel Venue { get; set; }
         public IEnumerable<StaffModel> Staff { get; set; }
+        public PublishState PublishState { get; set; }
         
     }
 }

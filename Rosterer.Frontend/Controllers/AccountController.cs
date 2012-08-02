@@ -86,6 +86,7 @@ namespace Rosterer.Frontend.Controllers
                     var user = AutoMapper.Mapper.Map<RegisterModel, User>(model);
                     user.PasswordHash = BCrypt.HashPassword(model.Password, BCrypt.GenerateSalt(12));
                     RavenSession.Store(user);
+                    RavenSession.SaveChanges();
                     createStatus = MembershipCreateStatus.Success;
                 }
                 

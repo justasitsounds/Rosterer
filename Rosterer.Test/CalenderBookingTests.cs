@@ -8,12 +8,20 @@ namespace Rosterer.Test
 {
     public class CalenderBookingTests
     {
+        private readonly User _user;
+        private readonly Venue _venue;
+
+        public CalenderBookingTests()
+        {
+            _user = new User("test","user");
+        }
+
         [Fact]
         public void CanCreateCalendarBooking()
         {
             DateTime start = DateTime.Now;
             DateTime end = start.AddHours(1);
-            var cEvent = new CalendarBooking(start, end);
+            var cEvent = new CalendarBooking(start, end, _user.Id, _venue);
             Assert.Equal(cEvent.StartTime, start);
             Assert.Equal(cEvent.EndTime, end);
         }
@@ -23,13 +31,13 @@ namespace Rosterer.Test
         {
             DateTime start = DateTime.Now.AddDays(1);
             DateTime end = start.AddHours(-1);
-            Assert.Throws<ArgumentOutOfRangeException>(() => { new CalendarBooking(start, end); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { new CalendarBooking(start, end, _user.Id, _venue); });
         }
 
         [Fact]
         public void CalendarBookingsAreInDraftStateByDefault()
         {
-            var cEvent = new CalendarBooking(DateTime.Now, DateTime.Now.AddHours(2));
+            var cEvent = new CalendarBooking(DateTime.Now, DateTime.Now.AddHours(2), _user.Id, _venue);
             Assert.Equal(cEvent.PublishState,PublishState.Draft);
         }
 
@@ -38,7 +46,7 @@ namespace Rosterer.Test
         {
             DateTime start = DateTime.Now;
             DateTime end = start.AddHours(1);
-            var cEvent = new CalendarBooking(start, end);
+            var cEvent = new CalendarBooking(start, end, _user.Id, _venue);
             Assert.True(cEvent.PublishState == PublishState.Draft);
             Assert.True(cEvent.PublishDate == DateTime.MinValue);
             cEvent.Publish();
@@ -51,7 +59,7 @@ namespace Rosterer.Test
         {
             var start = DateTime.Now;
             var end = start.AddHours(1);
-            var cEvent = new CalendarBooking(start, end);
+            var cEvent = new CalendarBooking(start, end, _user.Id, _venue);
 
             CalendarBooking publishedBooking = null;
             DomainEvents.Register<BookingPublishedEvent>(p => publishedBooking = p.PublishedBooking);
@@ -65,7 +73,7 @@ namespace Rosterer.Test
         {
             var start = DateTime.Now;
             var end = start.AddHours(1);
-            var cEvent = new CalendarBooking(start, end);
+            var cEvent = new CalendarBooking(start, end, _user.Id, _venue);
 
             CalendarBooking modifiedBooking = null;
             DomainEvents.Register<BookingModifiedEvent>(p => modifiedBooking = p.ModifiedBooking);
@@ -79,7 +87,7 @@ namespace Rosterer.Test
         {
             DateTime start = DateTime.Now;
             DateTime end = start.AddHours(1);
-            var cEvent = new CalendarBooking(start, end);
+            var cEvent = new CalendarBooking(start, end, _user.Id, _venue);
             cEvent.Publish();
             Assert.True(cEvent.PublishState == PublishState.Published);
             var lastModifiedDate = cEvent.LastModified;

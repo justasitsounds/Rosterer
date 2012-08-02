@@ -7,9 +7,11 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Raven.Abstractions.Data;
+using Raven.Client;
 using Raven.Client.Document;
 using Rosterer.Domain;
 using Rosterer.Domain.Entities;
+using Rosterer.Domain.Events;
 using Rosterer.Frontend.ObjectMappers;
 using Rosterer.Frontend.Plumbing;
 
@@ -19,7 +21,7 @@ namespace Rosterer.Frontend
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : HttpApplication, IContainerAccessor
     {
-        public static DocumentStore Store { get; set; }
+        
         private static IWindsorContainer container;
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -54,19 +56,7 @@ namespace Rosterer.Frontend
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            ConnectionStringParser<RavenConnectionStringOptions> parser =
-                ConnectionStringParser<RavenConnectionStringOptions>.FromConnectionStringName("RavenDB");
-            parser.Parse();
-
-            Store = new DocumentStore
-                        {
-                            ApiKey = parser.ConnectionStringOptions.ApiKey,
-                            Url = parser.ConnectionStringOptions.Url,
-                        };
-
-            Store.Initialize();
-            Store.Conventions.IdentityPartsSeparator = "-";
-
+            
             BootstrapContainer();
 
             container.Register(Component.For<MyMembershipProvider>()
@@ -78,28 +68,19 @@ namespace Rosterer.Frontend
 
         protected void Application_Error()
         {
-            try
+            var exception = Server.GetLastError();
+            var logEntry = new LogEntry
             {
-                var exception = Server.GetLastError();
-                var logEntry = new LogEntry
-                {
-                    Date = DateTime.Now,
-                    Message = exception.Message,
-                    StackTrace = exception.StackTrace,
-                };
+                Date = DateTime.Now,
+                Message = exception.Message,
+                StackTrace = exception.StackTrace,
+            };
 
-                using (var datacontext = Store.OpenSession())
-                {
-                    datacontext.Store(logEntry);
-                    datacontext.SaveChanges();
-                }
-                
-                
-            }
-            catch (Exception)
+            using (var datacontext = container.Resolve<IDocumentStore>().OpenSession())
             {
-                // failed to record exception
-            }
+                datacontext.Store(logEntry);
+                datacontext.SaveChanges();
+            }                               
         }
 
         protected void Application_End()
@@ -114,20 +95,22 @@ namespace Rosterer.Frontend
 
         private static void BootstrapContainer()
         {
-            container = new WindsorContainer()
-                .Install(FromAssembly.This());
-            var controllerFactory = new WindsorControllerFactory(container);
-            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
-            container.Register(
-                Component.For<HttpSessionStateBase>()
-                .LifeStyle.PerWebRequest
-                .UsingFactoryMethod(() => new HttpSessionStateWrapper(HttpContext.Current.Session))
-                );
-            BasedOnDescriptor processes = AllTypes.FromAssembly(Assembly.GetAssembly(typeof (CalendarBooking)))
-                .BasedOn(typeof (IHandle<>))
-                .WithService.AllInterfaces().LifestylePerWebRequest()
-                ;
-            container.Register(processes);
+            if (container == null)
+            {
+                container = new WindsorContainer()
+                    .Install(FromAssembly.This());
+                var controllerFactory = new WindsorControllerFactory(container);
+                ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+                container.Register(
+                    Component.For<HttpSessionStateBase>()
+                        .LifeStyle.PerWebRequest
+                        .UsingFactoryMethod(() => new HttpSessionStateWrapper(HttpContext.Current.Session))
+                    );
+
+                container.Register(AllTypes.FromAssembly(Assembly.GetAssembly(typeof (CalendarBooking)))
+                                       .BasedOn(typeof (IHandle<>))
+                                       .WithService.AllInterfaces().LifestylePerWebRequest());
+            }
 
 
 

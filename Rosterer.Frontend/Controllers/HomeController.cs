@@ -14,8 +14,10 @@ namespace Rosterer.Frontend.Controllers
         [Authorize]
         public ActionResult Index(int? month, int? year)
         {
-            var staff = AutoMapper.Mapper.Map<List<User>,List<StaffModel>>(RavenSession.Query<User>().ToList());
-            var venue = AutoMapper.Mapper.Map<List<Venue>,List<VenueModel>>(RavenSession.Query<Venue>().ToList());
+            List<User> userRecords = RavenSession.Query<User>().ToList();
+            var staff = AutoMapper.Mapper.Map<List<User>,List<StaffModel>>(userRecords);
+            List<Venue> venuerecords = RavenSession.Query<Venue>().ToList();
+            var venue = AutoMapper.Mapper.Map<List<Venue>,List<VenueModel>>(venuerecords);
             return View(new HomeModel(staff,venue));
         }
 
@@ -23,26 +25,5 @@ namespace Rosterer.Frontend.Controllers
         {
             return View();
         }
-
-        [HttpPost]
-        public ActionResult Venue(VenueModel venueModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var venue = AutoMapper.Mapper.Map<VenueModel, Venue>(venueModel);
-                
-                RavenSession.Store(venue);
-                RavenSession.SaveChanges();
-            }
-            ModelState.Clear();
-    
-            if (Request.IsAjaxRequest())
-              return PartialView("VenueForm", venueModel);
-            return RedirectToAction("Index");
-        }
-
-        
-
     }
-    
 }

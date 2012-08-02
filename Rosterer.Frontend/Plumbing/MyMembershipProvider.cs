@@ -14,14 +14,9 @@ namespace Rosterer.Frontend.Plumbing
 {
     public class MyMembershipProvider : MembershipProvider
     {
-        public IDocumentStore RavenStore { get; private set; }
+        public IDocumentSession RavenSession { get; set; }
 
         public string ProviderName { get { return "customProvider"; } }
-
-        public MyMembershipProvider()
-        {
-            RavenStore = MvcApplication.Store;
-        }
 
         public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
         {
@@ -63,12 +58,8 @@ namespace Rosterer.Frontend.Plumbing
 
         public override bool ValidateUser(string username, string password)
         {
-            using(var session = RavenStore.OpenSession())
-            {
-                
-                var candidate = session.Query<User>().SingleOrDefault(u => u.EmailAddress == username);
-                return candidate != null && BCrypt.CheckPassword(password, candidate.PasswordHash);
-            }
+            var candidate = RavenSession.Query<User>().SingleOrDefault(u => u.EmailAddress == username);
+            return candidate != null && BCrypt.CheckPassword(password, candidate.PasswordHash);           
         }
 
         public override bool UnlockUser(string userName)
@@ -78,16 +69,14 @@ namespace Rosterer.Frontend.Plumbing
 
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline)
         {
-            using (var session = RavenStore.OpenSession())
-            {
-                var user = session.Load<User>((string) providerUserKey);
-                return AutoMapper.Mapper.Map<User, RosterMembershipUser>(user);
-            }
+            var user = RavenSession.Load<User>((string)providerUserKey);
+            return AutoMapper.Mapper.Map<User, RosterMembershipUser>(user);           
         }
 
         public override MembershipUser GetUser(string username, bool userIsOnline)
         {
-            return null;
+            var user = RavenSession.Query<User>().Single(u => u.EmailAddress == username);
+            return AutoMapper.Mapper.Map<User, RosterMembershipUser>(user);    
         }
 
         public override string GetUserNameByEmail(string email)
@@ -107,24 +96,23 @@ namespace Rosterer.Frontend.Plumbing
 
         private MembershipUserCollection PagedMembershipUserCollection(int pageIndex, int pageSize, out int totalRecords, Expression<Func<User, bool>> expression)
         {
-            using (var session = RavenStore.OpenSession())
+            
+            RavenQueryStatistics stats;
+            var users = RavenSession.Query<User>()
+                .Statistics(out stats)
+                .Where(expression)
+                .Skip(pageIndex*pageSize)
+                .Take(pageSize)
+                .ToArray();
+            totalRecords = stats.TotalResults;
+            var rosterUsers = AutoMapper.Mapper.Map<User[], RosterMembershipUser[]>(users);
+            var collection = new MembershipUserCollection();
+            foreach (var rosterMembershipUser in rosterUsers)
             {
-                RavenQueryStatistics stats;
-                var users = session.Query<User>()
-                    .Statistics(out stats)
-                    .Where(expression)
-                    .Skip(pageIndex*pageSize)
-                    .Take(pageSize)
-                    .ToArray();
-                totalRecords = stats.TotalResults;
-                var rosterUsers = AutoMapper.Mapper.Map<User[], RosterMembershipUser[]>(users);
-                var collection = new MembershipUserCollection();
-                foreach (var rosterMembershipUser in rosterUsers)
-                {
-                    collection.Add(rosterMembershipUser);
-                }
-                return collection;
+                collection.Add(rosterMembershipUser);
             }
+            return collection;
+            
         }
 
         public override int GetNumberOfUsersOnline()

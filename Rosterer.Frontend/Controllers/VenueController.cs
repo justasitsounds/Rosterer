@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using Rosterer.Domain.Entities;
 using Rosterer.Frontend.Models;
 
@@ -10,13 +11,6 @@ namespace Rosterer.Frontend.Controllers
 {
     public class VenueController : BaseController
     {
-        //
-        // GET: /Venue/
-
-        public ActionResult Index()
-        {
-            return View();
-        }
 
         //
         // GET: /Venue/Details/5
@@ -32,8 +26,7 @@ namespace Rosterer.Frontend.Controllers
         public ActionResult Create()
         {
             var model = new VenueModel();
-            IEnumerable<RegionModel> regionModels = AutoMapper.Mapper.Map<IEnumerable<Region>, IEnumerable<RegionModel>>(RegionList.Regions);
-            model.SetRegionList(regionModels);
+            
             
             return PartialView(model);
         } 
@@ -44,19 +37,17 @@ namespace Rosterer.Frontend.Controllers
         [HttpPost]
         public ActionResult Create(VenueModel venueModel)
         {
-            IEnumerable<RegionModel> regionModels = AutoMapper.Mapper.Map<IEnumerable<Region>, IEnumerable<RegionModel>>(RegionList.Regions);
-            venueModel.SetRegionList(regionModels);
+
             if (ModelState.IsValid)
             {
                 var venue = AutoMapper.Mapper.Map<VenueModel, Venue>(venueModel);
-                venue.Region = RegionList.Regions.Single(r => r.Name == venueModel.RegionName);
-                RavenSession.Store(venue);                
+                venue.Region = venueModel.SelectedRegion;
+                RavenSession.Store(venue);
+                RavenSession.SaveChanges();
             }
             ModelState.Clear();
-
-            if (Request.IsAjaxRequest())
-                return PartialView("Create", venueModel);
-            return RedirectToAction("Index");
+            return PartialView("Create", venueModel);
+            
         }
         
         //
@@ -76,8 +67,8 @@ namespace Rosterer.Frontend.Controllers
             try
             {
                 // TODO: Add update logic here
- 
-                return RedirectToAction("Index");
+
+                return null;
             }
             catch
             {
@@ -102,13 +93,19 @@ namespace Rosterer.Frontend.Controllers
             try
             {
                 // TODO: Add delete logic here
- 
-                return RedirectToAction("Index");
+
+                return null;
             }
             catch
             {
                 return View();
             }
+        }
+
+        public ActionResult VenueNav()
+        {
+            var venues = RavenSession.Query<Venue>().ToList();
+            return View(Mapper.Map<IList<Venue>, IList<VenueModel>>(venues));
         }
     }
 }

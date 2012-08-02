@@ -7,32 +7,8 @@ namespace Rosterer.Frontend.Controllers
 {
     public abstract class BaseController : Controller
     {
-        public IDocumentSession RavenSession { get; private set; }
+        public IDocumentSession RavenSession { get; set; }
         public ISessionState CurrentEditSession { get; set; } 
-        //public ILogger Logger { get; set; }
-
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (filterContext.IsChildAction)
-                return;
-            RavenSession = MvcApplication.Store.OpenSession();
-            base.OnActionExecuting(filterContext);
-        }
-
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-            if (filterContext.IsChildAction)
-                return;
-
-            using (RavenSession)
-            {
-                if (filterContext.Exception != null || RavenSession==null)
-                    return;
-
-                if (RavenSession != null)
-                    RavenSession.SaveChanges();
-            }
-            base.OnActionExecuted(filterContext);
-        }
+       
     }
 }

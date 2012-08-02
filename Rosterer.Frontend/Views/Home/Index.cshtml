@@ -17,7 +17,7 @@
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
-                <ul class="dropdown-menu admin">
+                <ul class="dropdown-menu admin" id="admindropdown">
                     <li>@Html.ActionLink("Create new user","Register","Account")</li>
                     <li><a href="#" id="openVenueForm">Create New Venue</a></li>
                     <li class="divider"></li>
@@ -29,13 +29,8 @@
                     </li>
                     }
                     <li class="divider"></li>
-                    <li class="nav-header">Filter Venues</li>
-                    @foreach (var venueModel in Model.Venues)
-                    {
-                    <li style="padding:3px 15px;">
-                        <input type="checkbox" name="venues" value="@venueModel.Id" checked="checked"/> @venueModel.Name
-                    </li>
-                    }
+                    <li class="nav-header" id="venueheader">Filter Venues</li>
+                    @Html.Partial("~/Views/Venue/VenueNav.cshtml", Model.Venues)
                 </ul>
             </li>
         </ul>
@@ -73,9 +68,16 @@
 <script type="text/javascript " src="/Scripts/isodate.js"></script>
     <script type="text/javascript">
 
-        var CloseVenueModal = function (data) {
-            $("#venueform").modal('hide');
-            $('#venueform').html();
+        var RePopulateVenueDropDown = function () {
+            $('li.venuelist').remove();
+            $.ajax({
+                type: "GET",
+                url: "Venue/VenueNav",
+                async: false,
+                success: function (result) {
+                    $('ul#admindropdown li#venueheader').after(result);
+                }
+            });
         };
 
         var epochToDate = function(jsonDate) {
@@ -135,6 +137,12 @@
                 + '&nbsp;<span>' + newdate.getMonthName() + ' ' + newdate.getFullYear() + '</span>&nbsp;'
                 + '<a href="#" class="skipMonth btn" data-month="' + nextmonth.getMonth() + '" data-year="' + nextmonth.getFullYear() + '">&gt;</a>'
             );
+        };       
+
+        var CloseVenueModal = function (data) {
+            $("#venueform").modal('hide');
+            $('#venueform').html();
+            RePopulateVenueDropDown();
         };
 
         $(document).ready(function () {

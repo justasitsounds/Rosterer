@@ -32,9 +32,9 @@ namespace Rosterer.Domain
             _modifiedEvents.Add(args.ModifiedBooking);
         }
 
-        public IList<string> RegisteredEvents
+        public IList<CalendarBooking> RegisteredEvents
         {
-            get { return _modifiedEvents.Select(e => e.Id).ToList(); }
+            get { return _modifiedEvents; }
         }
 
         public void Publish()

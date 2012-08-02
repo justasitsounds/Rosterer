@@ -10,7 +10,7 @@ namespace Rosterer.Test
 {
     public class CalendarWeekTests
     {
-        private static Dictionary<DateTime, Tuple<int,int>> TestDates()
+        private Dictionary<DateTime, Tuple<int,int>> TestDates()
         {
             return new Dictionary<DateTime, Tuple<int, int>>
                        {

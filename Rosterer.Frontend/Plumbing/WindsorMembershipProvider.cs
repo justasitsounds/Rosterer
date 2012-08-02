@@ -36,7 +36,7 @@ namespace Rosterer.Frontend.Plumbing {
 
         private MembershipProvider GetProvider() {
             try {
-                var provider = GetContainer().Resolve(providerId, new Hashtable()) as MembershipProvider;
+                var provider = GetContainer().Resolve<MembershipProvider>(providerId, new Hashtable());
                 if (provider == null)
                     throw new Exception(string.Format("Component '{0}' does not inherit MembershipProvider", providerId));
                 return provider;

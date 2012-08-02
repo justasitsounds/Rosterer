@@ -11,9 +11,10 @@ namespace Rosterer.Domain.Entities
         public Color DisplayColour { get; set; }
         public string PasswordHash { get; set; }
 
-        public User()
+        public User(string firstName, string lastName)
         {
-            
+            FirstName = firstName;
+            LastName = lastName;
         }
     }
 }
